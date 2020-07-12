@@ -45,67 +45,84 @@ http://www.dettus.net/detLFS/detLFS_0.07.tar.bz2
 
  The kernel is being downloaded from the Raspberry Github, since
  this is the platform I plan on running everything on.
-" ; date 
+" ;
 
-
-
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 
 export DOWNLOADSDIR=`pwd`/Downloads
 export SOURCESDIR=`pwd`/Sources
 mkdir -p $DOWNLOADSDIR
 mkdir -p $SOURCESDIR
 
-echo ">>> downloading the kernel, specifically for the Raspberry Pi" ; date 
-(
+if [ ! -f "$DOWNLOADSDIR/.detlfs.kernel" ]; then
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading the kernel, specifically for the Raspberry Pi"
+  (
 	cd $DOWNLOADSDIR
 	git clone https://github.com/raspberrypi/linux
 	git reset --hard git 4eda74f2dfcc8875482575c79471bde6766de3ad # this version of the kernel matches the pre-defined config file. you can use the latest version, but then you'd have to change 2_basesytem.sh as well.
 	rm -rf linux/.git
-	cp -r $DOWNLOADSDIR/linux $SOURCESDIR/
-)
-echo ">>> downloading Raspberry Pi's bootloader" ; date 
-(
-	wget -O $DOWNLOADSDIR/bootcode.bin  "https://raw.githubusercontent.com/raspberrypi/firmware/master/boot/bootcode.bin" 
-	wget -O $DOWNLOADSDIR/start.elf "https://raw.githubusercontent.com/raspberrypi/firmware/master/boot/start.elf" 
-)
-echo ">>> downloading busybox" ; date 
-(
-	# if you are updating to a new version of busybox, you will have to monitor the build process. the standard config_busybox file might fail.
-	wget --directory-prefix=$DOWNLOADSDIR -c https://busybox.net/downloads/busybox-1.31.1.tar.bz2
-	cd $SOURCESDIR ; tar xfj $DOWNLOADSDIR/busybox-1.31.1.tar.bz2 ; mv busybox-1.31.1 busybox
-)
-echo ">>> downloading binutils" ; date 
-(
-	wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/binutils/binutils-2.32.tar.xz
-	cd $SOURCESDIR ; tar xfJ $DOWNLOADSDIR/binutils-2.32.tar.xz ; mv binutils-2.32 binutils
-)
-echo ">>> downloading glibc" ; date 
-(
-	wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.xz
-	cd $SOURCESDIR ; tar xfJ $DOWNLOADSDIR/glibc-2.29.tar.xz ; mv glibc-2.29 glibc
-)
-echo ">>> downloading gcc" ; date 
-(
-	wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.xz
-	wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.xz
-	wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
-	wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/gcc/gcc-8.3.0/gcc-8.3.0.tar.gz
-	cd $SOURCESDIR ; tar xfz $DOWNLOADSDIR/gcc-8.3.0.tar.gz ; mv gcc-8.3.0 gcc
-	cd gcc
-	tar xfJ $DOWNLOADSDIR/gmp-6.1.2.tar.xz ; mv gmp-6.1.2 gmp
-	tar xfJ $DOWNLOADSDIR/mpfr-4.0.2.tar.xz ; mv mpfr-4.0.2 mpfr
-	tar xfz $DOWNLOADSDIR/mpc-1.1.0.tar.gz ; mv mpc-1.1.0 mpc
+        touch "$DOWNLOADSDIR/.detlfs.kernel"
+	cp --reflin=auto -r $DOWNLOADSDIR/linux $SOURCESDIR/
+  )
+fi
 
-)
+if [ ! -f "$DOWNLOADSDIR/.detlfs.bootloader" ]; then
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading Raspberry Pi's bootloader"
+  wget -O $DOWNLOADSDIR/bootcode.bin  "https://raw.githubusercontent.com/raspberrypi/firmware/master/boot/bootcode.bin"
+  wget -O $DOWNLOADSDIR/start.elf "https://raw.githubusercontent.com/raspberrypi/firmware/master/boot/start.elf"
+  touch "$DOWNLOADSDIR/.detlfs.bootloader"
+fi
 
-echo ">>> downloading make" ; date
-(
-	 wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz
-	cd $SOURCESDIR ; tar xfz $DOWNLOADSDIR/make-4.2.1.tar.gz ; mv make-4.2.1 make
-# fixing make/glob/glob.c to circumvent an old __alloca bug
-echo "232a233
-> # define __alloca     alloca" | patch -p0 make/glob/glob.c
-)
+if [ ! -f "$DOWNLOADSDIR/.detlfs.busybox" ]; then
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading busybox"
+  # if you are updating to a new version of busybox, you will have to monitor the build process. the standard config_busybox file might fail.
+  wget --directory-prefix=$DOWNLOADSDIR -c https://busybox.net/downloads/busybox-1.31.1.tar.bz2
+  cd $SOURCESDIR ; tar xfj $DOWNLOADSDIR/busybox-1.31.1.tar.bz2 ; mv busybox-1.31.1 busybox
+  touch "$DOWNLOADSDIR/.detlfs.busybox"
+fi
 
-echo ">>> done" ; date
+if [ ! -f "$DOWNLOADSDIR/.detlfs.binutils" ]; then
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading binutils"
+  wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/binutils/binutils-2.32.tar.xz
+  tar -xpJf $DOWNLOADSDIR/binutils-2.32.tar.xz -C $SOURCESDIR
+  mv $SOURCESDIR/binutils-2.32 $SOURCESDIR/binutils
+  touch "$DOWNLOADSDIR/.detlfs.binutils"
+fi
 
+if [ ! -f "$DOWNLOADSDIR/.detlfs.glibc" ]; then
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading glibc"
+  wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.xz
+  cd ; tar -xpJf $DOWNLOADSDIR/glibc-2.29.tar.xz -C $SOURCESDIR
+  mv $SOURCESDIR/glibc-2.29 $SOURCESDIR/glibc
+  touch "$DOWNLOADSDIR/.detlfs.glibc"
+fi
+
+if [ ! -f "$DOWNLOADSDIR/.detlfs.gcc" ]; then
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading gcc"
+  wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.xz
+  wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.xz
+  wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
+  wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/gcc/gcc-8.3.0/gcc-8.3.0.tar.gz
+  tar -xpzf $DOWNLOADSDIR/gcc-8.3.0.tar.gz -C $SOURCESDIR
+  mv $SOURCESDIR/gcc-8.3.0 $SOURCESDIR/gcc
+  tar -xpJf $DOWNLOADSDIR/gmp-6.1.2.tar.xz -C $SOURCESDIR/gcc
+  mv $SOURCESDIR/gcc/gmp-6.1.2 $SOURCESDIR/gcc/gmp
+  tar -xpJf $DOWNLOADSDIR/mpfr-4.0.2.tar.xz -C $SOURCESDIR/gcc
+  mv $SOURCESDIR/gcc/mpfr-4.0.2 $SOURCESDIR/gcc/mpfr
+  tar xfz $DOWNLOADSDIR/mpc-1.1.0.tar.gz -C $SOURCESDIR/gcc
+  mv $SOURCESDIR/gcc mpc-1.1.0 $SOURCESDIR/gcc/mpc
+  touch "$DOWNLOADSDIR/.detlfs.gcc"
+fi
+
+if [ ! -f "$DOWNLOADSDIR/.detlfs.make" ]; then
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading make" ; date
+   wget --directory-prefix=$DOWNLOADSDIR -c ftp://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz
+  tar -xzpf $DOWNLOADSDIR/make-4.2.1.tar.gz -C $SOURCESDIR
+  mv $SOURCESDIR/make-4.2.1 $SOURCESDIR/make
+  # fixing make/glob/glob.c to circumvent an old __alloca bug
+  echo "232a233
+> # define __alloca     alloca" | patch -p0 $SOURCESDIR/make/glob/glob.c
+  touch "$DOWNLOADSDIR/.detlfs.make"
+fi
+
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
