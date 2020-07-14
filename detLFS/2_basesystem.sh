@@ -54,39 +54,39 @@ export SOURCESDIR=`pwd`/Sources
 export DOWNLOADSDIR=`pwd`/Downloads
 export DESTINATIONDIR=`pwd`/Destination
 
-mkdir -p $DESTINATIONDIR
+mkdir -p "$DESTINATIONDIR"
 
-export PATH=$TOOLSDIR/bin:$PATH
+export PATH="$TOOLSDIR"/bin:$PATH
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building KERNEL (raspberry pi specific)"
 (
-	cd $BUILDDIR/
-	rm -rf linux ; cp -r $SOURCESDIR/linux .
+	cd "$BUILDDIR"/
+	rm -rf linux ; cp -r "$SOURCESDIR"/linux .
 	cd linux
 	export KERNEL=kernel7
 	convert $DETLFSROOT/logo/mylogo.xpm -scale \!80x80 /tmp/mylogo.png
 	pngtopnm /tmp/mylogo.png | ppmquant 224 | pnmnoraw >drivers/video/logo/logo_linux_clut224.ppm
-	make ARCH=arm CROSS_COMPILE=$TOOLSDIR/bin/arm-linux-gnueabihf- bcm2709_defconfig
+        make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- bcm2709_defconfig
 ## configuration of the kernel can be done by choosing one of the three. 
 ##	cat $DETLFSROOT/config_kernel | sed -e 's?CONFIG_CROSS_COMPILE=".*"?CONFIG_CROSS_COMPILE="'$TOOLSDIR'/bin/arm-linux-gnueabihf-"?g' >.config 
 #	vimdiff .config $DETLFSROOT/config_kernel
 #	make ARCH=arm menuconfig
 ### pick one!
-	make ARCH=arm CROSS_COMPILE=$TOOLSDIR/bin/arm-linux-gnueabihf- zImage modules dtbs 
-	mkdir -p $DESTINATIONDIR/boot $DESTINATIONDIR/usr
-	make ARCH=arm CROSS_COMPILE=$TOOLSDIR/bin/arm-linux-gnueabihf- INSTALL_MOD_PATH=$DESTINATIONDIR/ modules_install
-	make ARCH=arm CROSS_COMPILE=$TOOLSDIR/bin/arm-linux-gnueabihf- INSTALL_HDR_PATH=$DESTINATIONDIR/usr/ headers_install
-	cp arch/arm/boot/zImage $DESTINATIONDIR/boot/kernel.img
-	cp arch/arm/boot/dts/*.dtb $DESTINATIONDIR/boot
-	mkdir -p $DESTINATIONDIR/boot/overlays
-	cp arch/arm/boot/dts/overlays/*.dtb $DESTINATIONDIR/boot/overlays
-	cp arch/arm/boot/dts/overlays/README $DESTINATIONDIR/boot/overlays
+	make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- zImage modules dtbs
+	mkdir -p "$DESTINATIONDIR"/boot "$DESTINATIONDIR"/usr
+	make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- INSTALL_MOD_PATH="$DESTINATIONDIR"/ modules_install
+	make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- INSTALL_HDR_PATH="$DESTINATIONDIR"/usr/ headers_install
+	cp arch/arm/boot/zImage "$DESTINATIONDIR"/boot/kernel.img
+	cp arch/arm/boot/dts/*.dtb "$DESTINATIONDIR"/boot
+	mkdir -p "$DESTINATIONDIR"/boot/overlays
+	cp arch/arm/boot/dts/overlays/*.dtb "$DESTINATIONDIR"/boot/overlays
+	cp arch/arm/boot/dts/overlays/README "$DESTINATIONDIR"/boot/overlays
 )
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building BUSYBOX"
 (
-	cd $BUILDDIR/
-	rm -rf busybox ; cp -r $SOURCESDIR/busybox . ; cd busybox
+	cd "$BUILDDIR"/
+	rm -rf busybox ; cp -r "$SOURCESDIR"/busybox . ; cd busybox
 	(
 		cd networking
 echo "6c6,7
@@ -96,17 +96,17 @@ echo "6c6,7
 > #include <bits/xopen_lim.h>
 " | patch -p0 tls_aesgcm.c
 	)
-   	make ARCH=arm CROSS_COMPILE=$TOOLSDIR/bin/arm-linux-gnueabihf- defconfig
+        make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- defconfig
 ## configuration of busybox can be done by choosing one of the two
 	cat $DETLFSROOT/config_busybox | sed -e 's?CONFIG_CROSS_COMPILER_PREFIX=".*"?CONFIG_CROSS_COMPILER_PREFIX="'$TOOLSDIR'/bin/arm-linux-gnueabihf-"?g' >.config
 # 	vimdiff .config ../../../config_busybox
 #   	make ARCH=arm menuconfig
 ### pick one!
-   	make ARCH=arm CROSS_COMPILE=$TOOLSDIR/bin/arm-linux-gnueabihf- install 
+        make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- install
 	cd _install &&	\
 	(
 		pwd
-		tar cvf - * | ( cd $DESTINATIONDIR ; tar xvf - )
+		tar cvf - * | ( cd "$DESTINATIONDIR" ; tar xvf - )
 	)
 )
 
@@ -116,13 +116,13 @@ echo ">>> ($date): copying skeldir/"
 (
 	cd $DETLFSROOT/skeldir
 	pwd
-	tar cvf - * | ( cd $DESTINATIONDIR ; tar xvf - )
+	tar cvf - * | ( cd "$DESTINATIONDIR" ; tar xvf - )
 )
 echo ">>> copying raspberry specific bootloader files" ; date
 (
-	cp $DOWNLOADSDIR/start.elf $DOWNLOADSDIR/bootcode.bin $DESTINATIONDIR/boot/
+	cp "$DOWNLOADSDIR"/start.elf "$DOWNLOADSDIR"/bootcode.bin "$DESTINATIONDIR"/boot/
 )
 
-du -sh $DESTINATIONDIR
+du -sh "$DESTINATIONDIR"
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
