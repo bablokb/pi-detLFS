@@ -54,7 +54,7 @@ mkdir -p $TOOLSDIR
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing Kernel Headers"
 (
 	cd $BUILDDIR 
-	cp -r $SOURCESDIR/linux .
+	cp -r --reflink=auto $SOURCESDIR/linux .
 	cd linux
 	mkdir -p $TOOLSDIR/usr/include/asm
 	make  ARCH=arm INSTALL_HDR_PATH=$TOOLSDIR/usr headers_install  

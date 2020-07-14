@@ -61,7 +61,7 @@ export PATH="$TOOLSDIR"/bin:$PATH
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building KERNEL (raspberry pi specific)"
 (
 	cd "$BUILDDIR"/
-	rm -rf linux ; cp -r "$SOURCESDIR"/linux .
+	rm -rf linux ; cp -r --reflink=auto "$SOURCESDIR"/linux .
 	cd linux
 	export KERNEL=kernel7
 	convert $DETLFSROOT/logo/mylogo.xpm -scale \!80x80 /tmp/mylogo.png
@@ -76,17 +76,17 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building KERNEL (raspberry pi specific)"
 	mkdir -p "$DESTINATIONDIR"/boot "$DESTINATIONDIR"/usr
 	make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- INSTALL_MOD_PATH="$DESTINATIONDIR"/ modules_install
 	make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- INSTALL_HDR_PATH="$DESTINATIONDIR"/usr/ headers_install
-	cp arch/arm/boot/zImage "$DESTINATIONDIR"/boot/kernel.img
-	cp arch/arm/boot/dts/*.dtb "$DESTINATIONDIR"/boot
+	cp --reflink=auto arch/arm/boot/zImage "$DESTINATIONDIR"/boot/kernel.img
+	cp --reflink=auto arch/arm/boot/dts/*.dtb "$DESTINATIONDIR"/boot
 	mkdir -p "$DESTINATIONDIR"/boot/overlays
-	cp arch/arm/boot/dts/overlays/*.dtb "$DESTINATIONDIR"/boot/overlays
-	cp arch/arm/boot/dts/overlays/README "$DESTINATIONDIR"/boot/overlays
+	cp --reflink=auto arch/arm/boot/dts/overlays/*.dtb "$DESTINATIONDIR"/boot/overlays
+	cp --reflink=auto arch/arm/boot/dts/overlays/README "$DESTINATIONDIR"/boot/overlays
 )
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building BUSYBOX"
 (
 	cd "$BUILDDIR"/
-	rm -rf busybox ; cp -r "$SOURCESDIR"/busybox . ; cd busybox
+	rm -rf busybox ; cp --reflink=auto -r "$SOURCESDIR"/busybox . ; cd busybox
 	(
 		cd networking
 echo "6c6,7
