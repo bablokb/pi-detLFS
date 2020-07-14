@@ -39,11 +39,9 @@ http://www.dettus.net/detLFS/detLFS_0.07.tar.bz2
 
  The purpose of this script is to build the cross compiler to be used later.
  Hopefully, the previous scripts are finished at this point.
-" ; date 
+"
 
-
-
-
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 
 export TOOLSDIR=`pwd`/Tools
 export BUILDDIR=`pwd`/Build
@@ -53,21 +51,16 @@ export DOWNLOADSDIR=`pwd`/Downloads
 mkdir -p $BUILDDIR
 mkdir -p $TOOLSDIR
 
-
-
-
-echo ">>> installing Kernel Headers" ; date 
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing Kernel Headers"
 (
 	cd $BUILDDIR 
 	cp -r $SOURCESDIR/linux .
-	cd linux
-	echo ">>>" ; date 
 	cd linux
 	mkdir -p $TOOLSDIR/usr/include/asm
 	make  ARCH=arm INSTALL_HDR_PATH=$TOOLSDIR/usr headers_install  
 )
 
-echo ">>> installing glibc headers" ; date 
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc headers"
 (
 	cd $BUILDDIR
 	mkdir glibc1 ; cd glibc1
@@ -76,7 +69,7 @@ echo ">>> installing glibc headers" ; date
 	mkdir -p $TOOLSDIR/include/gnu/
 	touch $TOOLSDIR/include/gnu/stubs.h
 )
-echo ">>> installing glibc headers" ; date 
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc headers"
 (
 	cd $BUILDDIR
 	mkdir glibc2 ; cd glibc2
@@ -85,14 +78,14 @@ echo ">>> installing glibc headers" ; date
 	mkdir -p $TOOLSDIR/arm-linux-gnueabihf/include/gnu/
 	touch $TOOLSDIR/arm-linux-gnueabihf/include/gnu/stubs.h
 )
-echo ">>> building binutils (cross)" ; date 
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building binutils (cross)"
 (
 	cd $BUILDDIR
 	mkdir binutils1 ; cd binutils1
 	$SOURCESDIR/binutils/configure --target=arm-linux-gnueabihf --prefix=$TOOLSDIR --with-sysroot --disable-nls --disable-werror
 	make   && make install
 )
-echo ">>> building gcc (cross)" ; date 
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building gcc (cross)"
 (
 	cd $BUILDDIR
 	mkdir gcc1 ; cd gcc1
@@ -101,9 +94,9 @@ echo ">>> building gcc (cross)" ; date
 
 )
 
-echo "At this point, the cross compiler can be used to build the glibc" ; date 
+echo ">>> At this point, the cross compiler can be used to build the glibc"
 export PATH=$TOOLSDIR/bin:$TOOLSDIR/usr/bin:$PATH
-echo ">>> installing glibc (for real)" ; date 
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (for real)"
 (
 	cd $BUILDDIR
 	mkdir glibc3 ; cd glibc3
@@ -113,31 +106,32 @@ echo ">>> installing glibc (for real)" ; date
 	make install
 )
 
-echo ">>> installing glibc (for the build)" ; date 
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (for the build)"
 (
 	cd $BUILDDIR
 	mkdir glibc4 ; cd glibc4
 	$SOURCESDIR/glibc/configure --host=arm-linux-gnueabihf --prefix=$TOOLSDIR/arm-linux-gnueabihf/ --with-headers=$TOOLSDIR/usr/include --with-fp
-	echo ">>>" ; date 
+	echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished configure"
 	make  cross-compiling=yes
 	make  cross-compiling=yes  install
 	make install
 )
-echo ">>> building gcc (with shared)" ; date 
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building gcc (with shared)"
 (
 	cd $BUILDDIR
 	mkdir gcc2 ; cd gcc2
 	$SOURCESDIR/gcc/configure --target=arm-linux-gnueabihf --prefix=$TOOLSDIR --disable-nls --enable-languages=c,c++ --disable-multilib --with-arch=armv7-a --with-fpu=vfpv3-d16 --with-float=hard --with-headers=$TOOLSDIR/usr/include --with-build-time-tools=$TOOLSDIR
-	echo ">>>" ; date 
+	echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished configure"
 	make  all-target-libgcc && make install-gcc && make install-target-libgcc
 	make 
 	make install
 )
 
 
-echo "Checking the Tools" ; date 
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): Checking the Tools"
 $TOOLSDIR/bin/arm-linux-gnueabihf-gcc -o Helloworld_shared.app helloworld.c
 $TOOLSDIR/bin/arm-linux-gnueabihf-gcc -static -o Helloworld_static.app helloworld.c
 file Helloworld_shared.app
 file Helloworld_static.app
-echo ">>> done" ; date 
+
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
