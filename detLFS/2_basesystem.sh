@@ -43,11 +43,9 @@ http://www.dettus.net/detLFS/detLFS_0.07.tar.bz2
  the purpose of minimalism, this script is copying a generic configuration.
 
  Hopefully, the previous scripts are finished at this point.
-" ; date
+"
 
-
-
-
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 
 export DETLFSROOT=`pwd`
 export TOOLSDIR=`pwd`/Tools
@@ -60,7 +58,7 @@ mkdir -p $DESTINATIONDIR
 
 export PATH=$TOOLSDIR/bin:$PATH
 
-echo ">>> building KERNEL (raspberry pi specific)" ; date
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building KERNEL (raspberry pi specific)"
 (
 	cd $BUILDDIR/
 	rm -rf linux ; cp -r $SOURCESDIR/linux .
@@ -85,7 +83,7 @@ echo ">>> building KERNEL (raspberry pi specific)" ; date
 	cp arch/arm/boot/dts/overlays/README $DESTINATIONDIR/boot/overlays
 )
 
-echo ">>> building BUSYBOX" ; date
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building BUSYBOX"
 (
 	cd $BUILDDIR/
 	rm -rf busybox ; cp -r $SOURCESDIR/busybox . ; cd busybox
@@ -110,12 +108,11 @@ echo "6c6,7
 		pwd
 		tar cvf - * | ( cd $DESTINATIONDIR ; tar xvf - )
 	)
-	date
 )
 
 
 
-echo ">>> copying skeldir/" ; date
+echo ">>> ($date): copying skeldir/"
 (
 	cd $DETLFSROOT/skeldir
 	pwd
@@ -127,4 +124,5 @@ echo ">>> copying raspberry specific bootloader files" ; date
 )
 
 du -sh $DESTINATIONDIR
-echo ">>>> done" ; date
+
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
