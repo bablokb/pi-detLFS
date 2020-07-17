@@ -120,7 +120,7 @@ echo ">>> ($date): copying skeldir/"
 )
 echo ">>> copying raspberry specific bootloader files" ; date
 (
-	cp "$DOWNLOADSDIR"/start.elf "$DOWNLOADSDIR"/bootcode.bin "$DESTINATIONDIR"/boot/
+	cp --reflink=auto "$DOWNLOADSDIR"/start.elf "$DOWNLOADSDIR"/bootcode.bin "$DESTINATIONDIR"/boot/
 )
 
 du -sh "$DESTINATIONDIR"
