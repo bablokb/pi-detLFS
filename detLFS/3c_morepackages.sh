@@ -75,7 +75,7 @@ echo ">> building alsa-firmware"
 
 	cd $BUILDDIR
 	mkdir alsa-firmware1 ; cd alsa-firmware1
-	cp -r  $SOURCESDIR/alsa-firmware .	# alsa firmware does not build like the others. 
+	cp --reflink=auto -r  $SOURCESDIR/alsa-firmware .	# alsa firmware does not build like the others.
 	cd alsa-firmware
 	./configure --prefix=/usr --target=arm-linux-gnueabihf 
 	make	 
@@ -101,7 +101,7 @@ echo ">>> building alsa-libs"
 ####
 ####	cd $BUILDDIR
 ####	mkdir wget1 ; cd wget1
-####	cp -r  $SOURCESDIR/wget .	# alsa firmware does not build like the others. 
+####	cp --reflink=auto -r  $SOURCESDIR/wget .
 ####	cd wget
 ####	./configure --prefix=/usr --target=arm-linux-gnueabihf  --host=arm-linux-gnueabihf --disable-iri --without-zlib --without-libgnutls-prefix
 ####	make	 

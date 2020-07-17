@@ -68,9 +68,9 @@ echo ">>> wireless-tools" ; date
 	cd $SOURCESDIR ; tar xfz $DOWNLOADSDIR/wireless_tools.29.tar.gz ; mv wireless_tools.29 wireless_tools
 	cd $BUILDDIR
 	mkdir wireless-tools1 ; cd wireless-tools1
-	cp -r $SOURCESDIR/wireless_tools/* .
+	cp --reflink=auto -r $SOURCESDIR/wireless_tools/* .
 	cat Makefile | sed -e "s?^CC.*=.*gcc?CC="$CROSS_COMPILE"gcc?g" | sed -e "s?PREFIX.*=.*local?PREFIX="$DESTINATIONDIR"/usr/?g" >/tmp/tmp1.txt 
-	cp /tmp/tmp1.txt Makefile
+	cp --reflink=auto /tmp/tmp1.txt Makefile
 	make && make install
 )
 echo ">>> libopenssl"; date
@@ -79,9 +79,9 @@ echo ">>> libopenssl"; date
 	cd $SOURCESDIR ; tar xfz $DOWNLOADSDIR/openssl-1.1.1g.tar.gz ; mv openssl-1.1.1g openssl
 	cd $BUILDDIR
 	mkdir openssl1 ; cd openssl1
-	cp -r $SOURCESDIR/openssl/* .
+	cp --reflink=auto -r $SOURCESDIR/openssl/* .
 	./Configure gcc --prefix=/usr 
-	cat Makefile | sed -e "s?^DESTDIR=.*\$?DESTDIR="$DESTDIR"?g" >/tmp/tmp2.txt ; cp /tmp/tmp2.txt Makefile
+	cat Makefile | sed -e "s?^DESTDIR=.*\$?DESTDIR="$DESTDIR"?g" >/tmp/tmp2.txt ; cp --reflink=auto /tmp/tmp2.txt Makefile
 	make
 	make install
 )
@@ -107,7 +107,7 @@ echo ">>> wpa-supplicant" ; date
 	cd $SOURCESDIR ; tar xfz $DOWNLOADSDIR/wpa_supplicant-2.9.tar.gz  ; mv wpa_supplicant-2.9 wpa_supplicant
 	cd $BUILDDIR
 	mkdir wpa_supplicant1 ; cd wpa_supplicant1
-	cp -r $SOURCESDIR/wpa_supplicant/* .
+	cp --reflink=auto -r $SOURCESDIR/wpa_supplicant/* .
 	cd wpa_supplicant
 	cat defconfig | sed -e "s/CONFIG_CTRL_IFACE_DBUS_NEW=y/#CONFIG_CTRL_IFACE_DBUS_NEW=y/g" - | sed -e "s/CONFIG_CTRL_IFACE_DBUS_INTRO=y/#CONFIG_CTRL_IFACE_DBUS_INTRO=y/g" - >.config
 	export LDFLAGS="-L"$DESTINATIONDIR"/lib -L"$DESTINATIONDIR"/usr/lib -L"$DESTINATIONDIR"/usr/lib --sysroot="$DESTINATIONDIR
