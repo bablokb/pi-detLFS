@@ -56,14 +56,14 @@ mkdir -p "$SOURCESDIR"
 
 if [ ! -f "$DOWNLOADSDIR/.detlfs.kernel" ]; then
   echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading the kernel, specifically for the Raspberry Pi"
-  (
-    cd "$DOWNLOADSDIR"
-    git clone https://github.com/raspberrypi/linux
-    git reset --hard git 4eda74f2dfcc8875482575c79471bde6766de3ad # this version of the kernel matches the pre-defined config file. you can use the latest version, but then you'd have to change 2_basesytem.sh as well.
-    rm -rf linux/.git
-    touch "$DOWNLOADSDIR/.detlfs.kernel"
-    cp --reflink=auto -r "$DOWNLOADSDIR"/linux "$SOURCESDIR"/
-  )
+  # get kernel-version from config_kernel
+  kversion=$(sed -n '/Kernel Configuration/s/[^0-9]* \([^ ]*\).*/\1/p' config_kernel)
+  kbranch="rpi-${kversion%.*}.y"
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): using branch $kbranch"
+  git clone --depth=1 --branch "$kbranch" https://github.com/raspberrypi/linux "$DOWNLOADSDIR"/linux
+  rm -rf "$DOWNLOADSDIR/linux/.git"
+  touch "$DOWNLOADSDIR/.detlfs.kernel"
+  cp --reflink=auto -r "$DOWNLOADSDIR"/linux "$SOURCESDIR"/
 fi
 
 if [ ! -f "$DOWNLOADSDIR/.detlfs.bootloader" ]; then
