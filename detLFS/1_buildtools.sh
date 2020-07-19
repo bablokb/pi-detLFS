@@ -83,14 +83,14 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building binutils (cross)"
 	cd "$BUILDDIR"
 	mkdir binutils1 ; cd binutils1
 	"$SOURCESDIR"/binutils/configure --target=arm-linux-gnueabihf --prefix="$TOOLSDIR" --with-sysroot --disable-nls --disable-werror
-	make   && make install
+	make -j "$NUM_CPUS" && make install
 )
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building gcc (cross)"
 (
 	cd "$BUILDDIR"
 	mkdir gcc1 ; cd gcc1
 	"$SOURCESDIR"/gcc/configure --target=arm-linux-gnueabihf --prefix="$TOOLSDIR" --disable-nls --disable-shared --enable-languages=c,c++ --with-arch=armv7-a --with-fpu=vfpv3-d16 --with-float=hard --disable-multilib --with-headers="$TOOLSDIR"/usr/include --with-build-time-tools="$TOOLSDIR" --with-build-sysroot="$TOOLSDIR"
-	make  all-target-libgcc && make install-gcc && make install-target-libgcc
+	make -j "$NUM_CPUS" all-target-libgcc && make install-gcc && make install-target-libgcc
 
 )
 
@@ -101,7 +101,7 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (for real)"
 	cd "$BUILDDIR"
 	mkdir glibc3 ; cd glibc3
 	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix="$TOOLSDIR" --with-headers="$TOOLSDIR"/usr/include --with-fp
-	make  cross-compiling=yes
+	make -j "$NUM_CPUS" cross-compiling=yes
 	make  cross-compiling=yes  install
 	make install
 )
@@ -112,7 +112,7 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (for the build)"
 	mkdir glibc4 ; cd glibc4
 	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix="$TOOLSDIR"/arm-linux-gnueabihf/ --with-headers="$TOOLSDIR"/usr/include --with-fp
 	echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished configure"
-	make  cross-compiling=yes
+	make -j "$NUM_CPUS" cross-compiling=yes
 	make  cross-compiling=yes  install
 	make install
 )
@@ -122,8 +122,8 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building gcc (with shared)"
 	mkdir gcc2 ; cd gcc2
 	"$SOURCESDIR"/gcc/configure --target=arm-linux-gnueabihf --prefix="$TOOLSDIR" --disable-nls --enable-languages=c,c++ --disable-multilib --with-arch=armv7-a --with-fpu=vfpv3-d16 --with-float=hard --with-headers="$TOOLSDIR"/usr/include --with-build-time-tools="$TOOLSDIR"
 	echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished configure"
-	make  all-target-libgcc && make install-gcc && make install-target-libgcc
-	make 
+	make -j "$NUM_CPUS" all-target-libgcc && make install-gcc && make install-target-libgcc
+	make -j "$NUM_CPUS"
 	make install
 )
 
