@@ -64,12 +64,12 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building KERNEL (raspberry pi specific)"
 	rm -rf linux ; cp -r --reflink=auto "$SOURCESDIR"/linux .
 	cd linux
 	export KERNEL=kernel7
-	convert $DETLFSROOT/logo/mylogo.xpm -scale \!80x80 /tmp/mylogo.png
+	convert "$DETLFSROOT"/logo/mylogo.xpm -scale \!80x80 /tmp/mylogo.png
 	pngtopnm /tmp/mylogo.png | ppmquant 224 | pnmnoraw >drivers/video/logo/logo_linux_clut224.ppm
         make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- bcm2709_defconfig
 ## configuration of the kernel can be done by choosing one of the three. 
-##	cat $DETLFSROOT/config_kernel | sed -e 's?CONFIG_CROSS_COMPILE=".*"?CONFIG_CROSS_COMPILE="'$TOOLSDIR'/bin/arm-linux-gnueabihf-"?g' >.config 
-#	vimdiff .config $DETLFSROOT/config_kernel
+##	cat "$DETLFSROOT"/config_kernel | sed -e 's?CONFIG_CROSS_COMPILE=".*"?CONFIG_CROSS_COMPILE="'$TOOLSDIR'/bin/arm-linux-gnueabihf-"?g' >.config 
+#	vimdiff .config "$DETLFSROOT"/config_kernel
 #	make ARCH=arm menuconfig
 ### pick one!
 	make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- zImage modules dtbs
@@ -98,7 +98,7 @@ echo "6c6,7
 	)
         make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- defconfig
 ## configuration of busybox can be done by choosing one of the two
-	cat $DETLFSROOT/config_busybox | sed -e 's?CONFIG_CROSS_COMPILER_PREFIX=".*"?CONFIG_CROSS_COMPILER_PREFIX="'$TOOLSDIR'/bin/arm-linux-gnueabihf-"?g' >.config
+	cat "$DETLFSROOT"/config_busybox | sed -e 's?CONFIG_CROSS_COMPILER_PREFIX=".*"?CONFIG_CROSS_COMPILER_PREFIX="'$TOOLSDIR'/bin/arm-linux-gnueabihf-"?g' >.config
 # 	vimdiff .config ../../../config_busybox
 #   	make ARCH=arm menuconfig
 ### pick one!
@@ -114,7 +114,7 @@ echo "6c6,7
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): copying skeldir/"
 (
-	cd $DETLFSROOT/skeldir
+	cd "$DETLFSROOT"/skeldir
 	pwd
 	tar cvf - * | ( cd "$DESTINATIONDIR" ; tar xvf - )
 )

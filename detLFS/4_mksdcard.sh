@@ -47,33 +47,26 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 echo "aborting now." ;  exit ## COMMENT THIS ONE OUT ONCE YOU UNDERSTAND THE SCRIPT
 
 
-
-
-
-
 export DESTINATIONDIR=`pwd`/Destination
 export MNTDIR=`pwd`/Mnt
-
-
-
 export MMCCARD="/dev/sdg"
 
 export BOOTFS=$MMCCARD"1"
 export ROOTFS=$MMCCARD"2"
 
-echo "WARNING! THIS WILL ERASE THE CONTENT OF "$MMCCARD
-echo "AND CREATE boot "$BOOTFS" AND root "$ROOTFS" ON IT."
+echo "WARNING! THIS WILL ERASE THE CONTENT OF $MMCCARD"
+echo "AND CREATE boot $BOOTFS AND root $ROOTFS ON IT."
 echo "YOU HAVE 30 seconds TO ABORT"
 
 sleep 30
-mkdir -p $MNTDIR
+mkdir -p "$MNTDIR"
 
 for I in $MMCCARD"*"
 do
 	umount $I
 done
 
-dd if=/dev/zero of=$MMCCARD bs=1M count=16
+dd if=/dev/zero of="$MMCCARD" bs=1M count=16
 echo "please create one msdos-partioni (16Mb), and one linux-partition."
 echo "n - new partition"
 echo "t - type"
@@ -81,27 +74,27 @@ echo "    c=msdos, 83=linux"
 echo "w - write"
 echo 
 echo "the boot partition should be at least this big:"
-du -sh $DESTINATIONDIR/boot
+du -sh "$DESTINATIONDIR"/boot
 echo "and the rest:"
-du -sh $DESTINATIONDIR/
+du -sh "$DESTINATIONDIR"/
 
-fdisk $MMCCARD
+fdisk "$MMCCARD"
 
 
-echo "formatting "$MMCCARD
-mkfs.vfat $BOOTFS
-mkfs.ext4 $ROOTFS
+echo "formatting $MMCCARD"
+mkfs.vfat "$BOOTFS"
+mkfs.ext4 "$ROOTFS"
 
 echo 
-mkdir $MNTDIR
-mount -t ext4 $ROOTFS $MNTDIR
-mkdir $MNTDIR/boot
-mount -t vfat $BOOTFS $MNTDIR/boot
+mkdir -p "$MNTDIR"
+mount -t ext4 "$ROOTFS" "$MNTDIR"
+mkdir -p "$MNTDIR"/boot
+mount -t vfat "$BOOTFS" "$MNTDIR"/boot
 
 mount
 
-cd $MNTDIR
-( cd $DESTINATIONDIR ; tar cvf - * ) | ( tar xvf - )
+cd "$MNTDIR"
+( cd "$DESTINATIONDIR" ; tar cvf - * ) | ( tar xvf - )
 mknod dev/console c 5 1
 mknod dev/null c 1 3
 mknod dev/tty0 c 4 0
@@ -112,8 +105,8 @@ chown -R root:root  .
 cd ..
 
 
-du -h $MNTDIR
-umount $BOOTFS
-umount $ROOTFS
+du -h "$MNTDIR"
+umount "$BOOTFS"
+umount "$ROOTFS"
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"

@@ -52,17 +52,17 @@ export DOWNLOADSDIR=`pwd`/Downloads
 export DESTINATIONDIR=`pwd`/Destination
 
 
-export PATH=$TOOLSDIR/bin:$PATH
-export CROSS_COMPILE=$TOOLSDIR/bin/arm-linux-gnueabihf-
-export DESTDIR=$DESTINATIONDIR
+export PATH="$TOOLSDIR"/bin:$PATH
+export CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf-
+export DESTDIR="$DESTINATIONDIR"
 
 
 echo ">>> building BINUTILS" ; date
 (
-	cd $BUILDDIR
+	cd "$BUILDDIR"
 	mkdir binutils2/ ; cd binutils2
-	export CROSS_COMPILE=$TOOLSDIR/bin/arm-linux-gnueabihf-
-	$SOURCESDIR/binutils/configure --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf --prefix=/usr --with-sysroot --disable-nls --disable-werror
+	export CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf-
+	"$SOURCESDIR"/binutils/configure --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf --prefix=/usr --with-sysroot --disable-nls --disable-werror
 	echo ">>>>>" ; date
 	make 
 	make install
@@ -70,9 +70,9 @@ echo ">>> building BINUTILS" ; date
 
 echo ">>> installing glibc (for real)" ; date
 (
-	cd $BUILDDIR
+	cd "$BUILDDIR"
 	mkdir glibc5 ; cd glibc5
-	$SOURCESDIR/glibc/configure --host=arm-linux-gnueabihf --prefix=/usr --with-headers=$DESTINATIONDIR/usr/include
+	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix=/usr --with-headers="$DESTINATIONDIR"/usr/include
 	echo ">>>>>" ; date
 	make  cross-compiling=yes
 	make  cross-compiling=yes  install
@@ -81,9 +81,9 @@ echo ">>> installing glibc (for real)" ; date
 
 echo ">>> installing glibc (again)" ; date
 (
-	cd $BUILDDIR
+	cd "$BUILDDIR"
 	mkdir glibc6 ; cd glibc6
-	$SOURCESDIR/glibc/configure --host=arm-linux-gnueabihf --prefix=/arm-linux-gnueabihf/ --with-headers=$DESTINATIONDIR/usr/include
+	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix=/arm-linux-gnueabihf/ --with-headers="$DESTINATIONDIR"/usr/include
 	echo ">>>>>" ; date
 	make  cross-compiling=yes
 	make  cross-compiling=yes  install
@@ -92,9 +92,9 @@ echo ">>> installing glibc (again)" ; date
 
 echo ">>> building gcc (arm->arm)" ; date
 (
-	cd $BUILDDIR
+	cd "$BUILDDIR"
 	mkdir gcc3 ; cd gcc3
-	$SOURCESDIR/gcc/configure --prefix=/usr --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf --disable-nls --enable-languages=c,c++ --disable-multilib --with-arch=armv7 --with-fpu=vfpv3-d16 --with-float=hard --with-build-sysroot=$DESTINATIONDIR
+	"$SOURCESDIR"/gcc/configure --prefix=/usr --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf --disable-nls --enable-languages=c,c++ --disable-multilib --with-arch=armv7 --with-fpu=vfpv3-d16 --with-float=hard --with-build-sysroot="$DESTINATIONDIR"
 	echo ">>>>>" ; date
 	make  all-target-libgcc && make install-gcc && make install-target-libgcc
 	make 
@@ -103,16 +103,16 @@ echo ">>> building gcc (arm->arm)" ; date
 
 echo ">>> building make" ; date
 (
-	cd $BUILDDIR
+	cd "$BUILDDIR"
 	mkdir make1 ; cd make1
-	$SOURCESDIR/make/configure --prefix=/usr --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf  --without-guile
+	"$SOURCESDIR"/make/configure --prefix=/usr --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf  --without-guile
 	make 
 	make install
 )
 
-du -sh $TOOLSDIR
-du -sh $BUILDDIR
-du -sh $DESTINATIONDIR
-du -sh $DESTINATIONDIR/boot
+du -sh "$TOOLSDIR"
+du -sh "$BUILDDIR"
+du -sh "$DESTINATIONDIR"
+du -sh "$DESTINATIONDIR"/boot
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"

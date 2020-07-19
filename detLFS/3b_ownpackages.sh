@@ -53,28 +53,28 @@ export DOWNLOADSDIR=`pwd`/Downloads
 export DESTINATIONDIR=`pwd`/Destination
 
 
-export PATH=$TOOLSDIR/bin:$PATH
-export CROSS_COMPILE=$TOOLSDIR/bin/arm-linux-gnueabihf-
-export DESTDIR=$DESTINATIONDIR
+export PATH="$TOOLSDIR"/bin:$PATH
+export CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf-
+export DESTDIR="$DESTINATIONDIR"
 
 echo ">>> building make" ; date
 (
 # you should have downloaded them already in script 0_getit.sh. otherwise, comment those two lines in
 #	wget --directory-prefix=Downloads/ -c ftp://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz
-#	cd $SOURCESDIR ; tar xfz $DOWNLOADSDIR/make-4.2.1.tar.gz ; mv make-4.2.1 make
+#	cd "$SOURCESDIR" ; tar xfz "$DOWNLOADSDIR"/make-4.2.1.tar.gz ; mv make-4.2.1 make
 
-	cd $BUILDDIR
+	cd "$BUILDDIR"
 	mkdir make2 ; cd make2
 #note that the prefix says /usr here
-	$SOURCESDIR/make/configure --prefix=/usr --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf --without-guile
+	"$SOURCESDIR"/make/configure --prefix=/usr --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf --without-guile
 	make 
 # by setting the variable DESTDIR, the make install will use a different directoy as root dir
-	export DESTDIR=$DESTINATIONDIR
+	export DESTDIR="$DESTINATIONDIR"
 	make install
 )
 
-du -sh $TOOLSDIR
-du -sh $BUILDDIR
-du -sh $DESTINATIONDIR
+du -sh "$TOOLSDIR"
+du -sh "$BUILDDIR"
+du -sh "$DESTINATIONDIR"
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
