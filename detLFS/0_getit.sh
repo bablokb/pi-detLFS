@@ -111,7 +111,7 @@ if [ ! -f "$DOWNLOADSDIR/.detlfs.gcc" ]; then
   tar -xpJf "$DOWNLOADSDIR"/mpfr-4.0.2.tar.xz -C "$SOURCESDIR"/gcc
   mv "$SOURCESDIR"/gcc/mpfr-4.0.2 "$SOURCESDIR"/gcc/mpfr
   tar -xpzf "$DOWNLOADSDIR"/mpc-1.1.0.tar.gz -C "$SOURCESDIR"/gcc
-  mv "$SOURCESDIR"/gcc mpc-1.1.0 "$SOURCESDIR"/gcc/mpc
+  mv "$SOURCESDIR"/gcc/mpc-1.1.0 "$SOURCESDIR"/gcc/mpc
   touch "$DOWNLOADSDIR/.detlfs.gcc"
 fi
 
