@@ -112,13 +112,13 @@ echo "6c6,7
 
 
 
-echo ">>> ($date): copying skeldir/"
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): copying skeldir/"
 (
 	cd $DETLFSROOT/skeldir
 	pwd
 	tar cvf - * | ( cd "$DESTINATIONDIR" ; tar xvf - )
 )
-echo ">>> copying raspberry specific bootloader files" ; date
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): copying raspberry specific bootloader files" ; date
 (
 	cp --reflink=auto "$DOWNLOADSDIR"/start.elf "$DOWNLOADSDIR"/bootcode.bin "$DESTINATIONDIR"/boot/
 )
