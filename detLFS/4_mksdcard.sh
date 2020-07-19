@@ -41,7 +41,8 @@ http://www.dettus.net/detLFS/detLFS_0.07.tar.bz2
  to be run with ROOT PRIVILEDGES and is DANGEROUS. PLEASE LOOK
  AT IT BEFORE YOU RUN IT!!!
  Hopefully, the previous scripts are finished at this point.
-" ; date 
+"
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 
 echo "aborting now." ;  exit ## COMMENT THIS ONE OUT ONCE YOU UNDERSTAND THE SCRIPT
 
@@ -115,4 +116,4 @@ du -h $MNTDIR
 umount $BOOTFS
 umount $ROOTFS
 
-echo ">>> done" ; date
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"

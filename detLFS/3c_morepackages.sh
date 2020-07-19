@@ -41,7 +41,9 @@ http://www.dettus.net/detLFS/detLFS_0.07.tar.bz2
  compile your own packages.
 
  Hopefully, the previous scripts are finished at this point.
-" ; date
+"
+
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 
 export DETLFSROOT=`pwd`
 export TOOLSDIR=`pwd`/Tools
@@ -113,5 +115,5 @@ du -sh $TOOLSDIR
 du -sh $BUILDDIR
 du -sh $DESTINATIONDIR
 
-echo ">>> done" ; date
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
 

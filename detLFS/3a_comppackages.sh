@@ -40,7 +40,9 @@ http://www.dettus.net/detLFS/detLFS_0.07.tar.bz2
  The purpose of this script is to build the packages.
 
  Hopefully, the previous scripts are finished at this point.
-" ; date
+"
+
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 
 export DETLFSROOT=`pwd`
 export TOOLSDIR=`pwd`/Tools
@@ -113,5 +115,4 @@ du -sh $BUILDDIR
 du -sh $DESTINATIONDIR
 du -sh $DESTINATIONDIR/boot
 
-echo ">>> done" ; date
-
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
