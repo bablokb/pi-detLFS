@@ -48,6 +48,8 @@ export BUILDDIR=`pwd`/Build
 export SOURCESDIR=`pwd`/Sources
 export DOWNLOADSDIR=`pwd`/Downloads
 
+[ -z "$NUM_CPUS" ] && NUM_CPUS=$(nproc)
+
 mkdir -p "$BUILDDIR"
 mkdir -p "$TOOLSDIR"
 
