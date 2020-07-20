@@ -54,6 +54,8 @@ export SOURCESDIR=`pwd`/Sources
 export DOWNLOADSDIR=`pwd`/Downloads
 export DESTINATIONDIR=`pwd`/Destination
 
+[ -z "$NUM_CPUS" ] && NUM_CPUS=$(nproc)
+
 mkdir -p "$DESTINATIONDIR"
 
 export PATH="$TOOLSDIR"/bin:$PATH
