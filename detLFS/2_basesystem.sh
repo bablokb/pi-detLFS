@@ -47,6 +47,6 @@ pgmDir="${0%/*}"
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 
 "$pgmDir/2a_kernel.sh"
-"$pgmDir/2b_basesystem.sh"
+"$pgmDir/2b_base.sh"
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
