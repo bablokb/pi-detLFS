@@ -72,26 +72,36 @@ mkdir -p "$DESTINATIONDIR"
 
 export PATH="$TOOLSDIR"/bin:$PATH
 
-echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building KERNEL (raspberry pi specific)"
 
 cd "$BUILDDIR"/
 rm -rf linux ; cp -r --reflink=auto "$SOURCESDIR"/linux .
 cd linux
 
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): creating the logo"
+
 convert "$DETLFSROOT"/logo/mylogo.xpm -scale \!80x80 /tmp/mylogo.png
 pngtopnm /tmp/mylogo.png | ppmquant 224 | pnmnoraw >drivers/video/logo/logo_linux_clut224.ppm
 
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target $def_config"
+
 make -j "$NUM_CPUS" ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- "$def_config"
+cp -a .config "$DETLFSROOT"/config_kernel.defconfig
 
 # oldconfig will probably trigger some questions, so we copy it to
 # reuse it without questions on a second run
 cp -a "$DETLFSROOT"/config_kernel "$DETLFSROOT"/config_kernel.in
 cp -a "$DETLFSROOT"/config_kernel .config
+
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target oldconfig"
+
 make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- oldconfig
 cp -a .config "$DETLFSROOT"/config_kernel
 
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: targets zImage modules dtbs"
 
 make -j "$NUM_CPUS" ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- zImage modules dtbs
+
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: installing files"
 
 mkdir -p "$DESTINATIONDIR"/boot "$DESTINATIONDIR"/usr
 make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- INSTALL_MOD_PATH="$DESTINATIONDIR"/ modules_install
