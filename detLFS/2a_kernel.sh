@@ -101,7 +101,7 @@ cp --reflink=auto arch/arm/boot/zImage "$DESTINATIONDIR"/boot/kernel.img
 cp --reflink=auto arch/arm/boot/dts/*.dtb "$DESTINATIONDIR"/boot
 
 mkdir -p "$DESTINATIONDIR"/boot/overlays
-cp --reflink=auto arch/arm/boot/dts/overlays/*.dtb "$DESTINATIONDIR"/boot/overlays
+cp --reflink=auto arch/arm/boot/dts/overlays/*.dtb* "$DESTINATIONDIR"/boot/overlays
 cp --reflink=auto arch/arm/boot/dts/overlays/README "$DESTINATIONDIR"/boot/overlays
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
