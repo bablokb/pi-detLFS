@@ -41,6 +41,22 @@ https://github.com/bablokb/pi-detLFS
  Hopefully, the previous scripts are finished at this point.
 "
 
+if [ -z "$target" ]; then
+  echo "please set 'target' to one of [pi0,pi1,pi2,pi3,pi4] and restart"
+  exit 3
+fi
+target="${target#pi}"
+if [ "$target" -lt 2 ]; then
+  echo "building for Pi0/Pi0w/Pi1/CM1"
+  export KERNEL="kernel" defconfig="bcmrpi_defconfig"
+elif [ "$target" -lt 4 ]; then
+  echo "building for Pi2/Pi3/CM3"
+  export KERNEL="kernel7" defconfig="bcm2709_defconfig"
+else
+  echo "building for Pi4"
+  export KERNEL="kernel7l" defconfig="bcm2711_defconfig"
+fi
+
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 
 export DETLFSROOT=`pwd`
@@ -61,21 +77,29 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building KERNEL (raspberry pi specific)"
 cd "$BUILDDIR"/
 rm -rf linux ; cp -r --reflink=auto "$SOURCESDIR"/linux .
 cd linux
-export KERNEL=kernel7
+
 convert "$DETLFSROOT"/logo/mylogo.xpm -scale \!80x80 /tmp/mylogo.png
 pngtopnm /tmp/mylogo.png | ppmquant 224 | pnmnoraw >drivers/video/logo/logo_linux_clut224.ppm
-       make -j "$NUM_CPUS" ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- bcm2709_defconfig
-# configuration of the kernel can be done by choosing one of the three. 
-#	cat "$DETLFSROOT"/config_kernel | sed -e 's?CONFIG_CROSS_COMPILE=".*"?CONFIG_CROSS_COMPILE="'$TOOLSDIR'/bin/arm-linux-gnueabihf-"?g' >.config 
-	vimdiff .config "$DETLFSROOT"/config_kernel
-	make ARCH=arm menuconfig
-## pick one!
+
+make -j "$NUM_CPUS" ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- "$def_config"
+
+# oldconfig will probably trigger some questions, so we copy it to
+# reuse it without questions on a second run
+cp -a "$DETLFSROOT"/config_kernel "$DETLFSROOT"/config_kernel.in
+cp -a "$DETLFSROOT"/config_kernel .config
+make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- oldconfig
+cp -a .config "$DETLFSROOT"/config_kernel
+
+
 make -j "$NUM_CPUS" ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- zImage modules dtbs
+
 mkdir -p "$DESTINATIONDIR"/boot "$DESTINATIONDIR"/usr
 make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- INSTALL_MOD_PATH="$DESTINATIONDIR"/ modules_install
 make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- INSTALL_HDR_PATH="$DESTINATIONDIR"/usr/ headers_install
+
 cp --reflink=auto arch/arm/boot/zImage "$DESTINATIONDIR"/boot/kernel.img
 cp --reflink=auto arch/arm/boot/dts/*.dtb "$DESTINATIONDIR"/boot
+
 mkdir -p "$DESTINATIONDIR"/boot/overlays
 cp --reflink=auto arch/arm/boot/dts/overlays/*.dtb "$DESTINATIONDIR"/boot/overlays
 cp --reflink=auto arch/arm/boot/dts/overlays/README "$DESTINATIONDIR"/boot/overlays
