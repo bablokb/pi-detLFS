@@ -48,13 +48,16 @@ fi
 target="${target#pi}"
 if [ "$target" -lt 2 ]; then
   echo "building for Pi0/Pi0w/Pi1/CM1"
-  export KERNEL="kernel" defconfig="bcmrpi_defconfig"
+  export KERNEL="kernel"
+  export def_config="bcmrpi_defconfig"
 elif [ "$target" -lt 4 ]; then
   echo "building for Pi2/Pi3/CM3"
-  export KERNEL="kernel7" defconfig="bcm2709_defconfig"
+  export KERNEL="kernel7"
+  export def_config="bcm2709_defconfig"
 else
   echo "building for Pi4"
-  export KERNEL="kernel7l" defconfig="bcm2711_defconfig"
+  export KERNEL="kernel7l"
+  export def_config="bcm2711_defconfig"
 fi
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
