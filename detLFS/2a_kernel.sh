@@ -88,17 +88,17 @@ pngtopnm /tmp/mylogo.png | ppmquant 224 | pnmnoraw >drivers/video/logo/logo_linu
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target $def_config"
 
 make -j "$NUM_CPUS" ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- "$def_config"
-cp -a .config "$DETLFSROOT"/config_kernel.defconfig
+cp -a .config "$DETLFSROOT"/.config.defconfig
 
 # oldconfig will probably trigger some questions, so we copy it to
 # reuse it without questions on a second run
-cp -a "$DETLFSROOT"/config_kernel "$DETLFSROOT"/config_kernel.in
-cp -a "$DETLFSROOT"/config_kernel .config
-
-echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target oldconfig"
-
-make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- oldconfig
-cp -a .config "$DETLFSROOT"/config_kernel
+if [ -f "$DETLFSROOT"/.config ]; then
+  cp -a "$DETLFSROOT"/.config "$DETLFSROOT"/.config.in
+  cp -a "$DETLFSROOT"/.config .config
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target oldconfig"
+  make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- oldconfig
+  cp -a .config "$DETLFSROOT"/.config
+fi
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: targets zImage modules dtbs"
 
