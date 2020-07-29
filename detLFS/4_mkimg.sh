@@ -91,6 +91,7 @@ mount -t vfat "${loopdev}p1" "$mntdir/boot"
 
 # copy content
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): copying $DESTINATIONDIR to $mntdir"
+
 rsync -av "$DESTINATIONDIR/" "$mntdir"
 
 # create necessary device-files
@@ -106,10 +107,10 @@ sync
 
 # umount
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): umounting partitions"
-umount "$mntdir" && rm -fr "$mntdir"
+umount "$mntdir/boot" && umount "$mntdir" && rm -fr "$mntdir"
 
 # cleanup loop-mounts
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): releasing $loopdev"
-losetup -dv ${loopdev}
+losetup -d ${loopdev}
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
