@@ -110,7 +110,7 @@ mkdir -p "$DESTINATIONDIR"/boot "$DESTINATIONDIR"/usr
 make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- INSTALL_MOD_PATH="$DESTINATIONDIR"/ modules_install
 make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- INSTALL_HDR_PATH="$DESTINATIONDIR"/usr/ headers_install
 
-cp --reflink=auto arch/arm/boot/zImage "$DESTINATIONDIR"/boot/kernel.img
+cp --reflink=auto arch/arm/boot/zImage "$DESTINATIONDIR"/boot/$KERNEL.img
 cp --reflink=auto arch/arm/boot/dts/*.dtb "$DESTINATIONDIR"/boot
 
 mkdir -p "$DESTINATIONDIR"/boot/overlays
