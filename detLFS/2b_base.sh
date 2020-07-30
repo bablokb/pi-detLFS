@@ -46,16 +46,9 @@ https://github.com/bablokb/pi-detLFS
  Hopefully, the previous scripts are finished at this point.
 "
 
+source vars.sh.inc
+
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
-
-export DETLFSROOT=`pwd`
-export TOOLSDIR=`pwd`/Tools
-export BUILDDIR=`pwd`/Build
-export SOURCESDIR=`pwd`/Sources
-export DOWNLOADSDIR=`pwd`/Downloads
-export DESTINATIONDIR=`pwd`/Destination
-
-[ -z "$NUM_CPUS" ] && NUM_CPUS=$(nproc)
 
 mkdir -p "$DESTINATIONDIR"
 

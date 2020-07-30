@@ -41,35 +41,9 @@ https://github.com/bablokb/pi-detLFS
  Hopefully, the previous scripts are finished at this point.
 "
 
-if [ -z "$target" ]; then
-  echo "please set 'target' to one of [pi0,pi1,pi2,pi3,pi4] and restart"
-  exit 3
-fi
-target="${target#pi}"
-if [ "$target" -lt 2 ]; then
-  echo "building for Pi0/Pi0w/Pi1/CM1"
-  export KERNEL="kernel"
-  export def_config="bcmrpi_defconfig"
-elif [ "$target" -lt 4 ]; then
-  echo "building for Pi2/Pi3/CM3"
-  export KERNEL="kernel7"
-  export def_config="bcm2709_defconfig"
-else
-  echo "building for Pi4"
-  export KERNEL="kernel7l"
-  export def_config="bcm2711_defconfig"
-fi
+source vars.sh.inc
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
-
-export DETLFSROOT=`pwd`
-export TOOLSDIR=`pwd`/Tools
-export BUILDDIR=`pwd`/Build
-export SOURCESDIR=`pwd`/Sources
-export DOWNLOADSDIR=`pwd`/Downloads
-export DESTINATIONDIR=`pwd`/Destination
-
-[ -z "$NUM_CPUS" ] && NUM_CPUS=$(nproc)
 
 mkdir -p "$DESTINATIONDIR"
 

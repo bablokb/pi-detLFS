@@ -42,7 +42,7 @@ http://github.com/bablokb/pi-detLFS
 
 " ;
 
-export DESTINATIONDIR=`pwd`/Destination
+source vars.sh.inc
 
 if [ "$UID" != "0" ]; then
   echo "error: you need to be root to run this script!" >&2

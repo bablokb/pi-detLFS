@@ -42,15 +42,9 @@ http://www.dettus.net/detLFS/detLFS_0.07.tar.bz2
  Hopefully, the previous scripts are finished at this point.
 "
 
+source vars.sh.inc
+
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
-
-export DETLFSROOT=`pwd`
-export TOOLSDIR=`pwd`/Tools
-export BUILDDIR=`pwd`/Build
-export SOURCESDIR=`pwd`/Sources
-export DOWNLOADSDIR=`pwd`/Downloads
-export DESTINATIONDIR=`pwd`/Destination
-
 
 export PATH="$TOOLSDIR"/bin:$PATH
 export CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf-

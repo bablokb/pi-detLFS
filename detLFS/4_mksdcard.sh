@@ -46,8 +46,8 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 
 echo "aborting now." ;  exit ## COMMENT THIS ONE OUT ONCE YOU UNDERSTAND THE SCRIPT
 
+source vars.sh.inc
 
-export DESTINATIONDIR=`pwd`/Destination
 export MNTDIR=`pwd`/Mnt
 export MMCCARD="/dev/sdg"
 

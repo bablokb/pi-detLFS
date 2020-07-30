@@ -46,10 +46,10 @@ https://github.com/bablokb/pi-detLFS
  this is the platform I plan on running everything on.
 " ;
 
+source vars.sh.inc
+
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 
-export DOWNLOADSDIR=`pwd`/Downloads
-export SOURCESDIR=`pwd`/Sources
 mkdir -p "$DOWNLOADSDIR"
 mkdir -p "$SOURCESDIR"
 
