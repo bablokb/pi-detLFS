@@ -114,7 +114,7 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (again)"
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): copying raspberry specific bootloader files"
 (
-  cp --reflink=auto "$DOWNLOADSDIR"/start.elf "$DOWNLOADSDIR"/bootcode.bin "$DESTINATIONDIR"/boot/
+  cp --reflink=auto "$DOWNLOADSDIR"/boot/* "$DESTINATIONDIR"/boot/
 )
 
 du -sh "$DESTINATIONDIR"

@@ -49,13 +49,18 @@ source vars.sh.inc
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 
-mkdir -p "$DOWNLOADSDIR"
+mkdir -p "$DOWNLOADSDIR/boot"
 mkdir -p "$SOURCESDIR"
 
 if [ ! -f "$DOWNLOADSDIR/.detlfs.bootloader" ]; then
   echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading Raspberry Pi's bootloader"
-  wget -O "$DOWNLOADSDIR"/bootcode.bin  "https://raw.githubusercontent.com/raspberrypi/firmware/master/boot/bootcode.bin"
-  wget -O "$DOWNLOADSDIR"/start.elf "https://raw.githubusercontent.com/raspberrypi/firmware/master/boot/start.elf"
+  FIRMWARE_URL="https://raw.githubusercontent.com/raspberrypi/firmware/master/boot"
+  for f in bootcode.bin fixup.dat fixup4.dat fixup4cd.dat fixup4db.dat fixup4x.dat \
+           fixup_cd.dat fixup_db.dat fixup_x.dat start.elf start4.elf \
+           start4cd.elf start4db.elf start4x.elf start_cd.elf start_db.elf start_x.elf; do
+    wget -nvO "$DOWNLOADSDIR/boot/$f" "$FIRMWARE_URL/$f" &
+  done
+  wait
   touch "$DOWNLOADSDIR/.detlfs.bootloader"
 fi
 
