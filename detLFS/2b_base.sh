@@ -90,7 +90,29 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): copying skeldir/"
   tar cvf - * | ( cd "$DESTINATIONDIR" ; tar xvf - )
 )
 
-echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): copying raspberry specific bootloader files" ; date
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (for real)"
+(
+	cd "$BUILDDIR"
+	mkdir glibc5 ; cd glibc5
+	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix=/usr --with-headers="$DESTINATIONDIR"/usr/include
+	echo ">>>>>" ; date
+	make  cross-compiling=yes
+	make  cross-compiling=yes  install
+	make install
+)
+
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (again)"
+(
+	cd "$BUILDDIR"
+	mkdir glibc6 ; cd glibc6
+	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix=/arm-linux-gnueabihf/ --with-headers="$DESTINATIONDIR"/usr/include
+	echo ">>>>>" ; date
+	make  cross-compiling=yes
+	make  cross-compiling=yes  install
+	make install
+)
+
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): copying raspberry specific bootloader files"
 (
   cp --reflink=auto "$DOWNLOADSDIR"/start.elf "$DOWNLOADSDIR"/bootcode.bin "$DESTINATIONDIR"/boot/
 )

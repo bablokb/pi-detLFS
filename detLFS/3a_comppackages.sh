@@ -62,28 +62,6 @@ echo ">>> building BINUTILS" ; date
 	make install
 )
 
-echo ">>> installing glibc (for real)" ; date
-(
-	cd "$BUILDDIR"
-	mkdir glibc5 ; cd glibc5
-	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix=/usr --with-headers="$DESTINATIONDIR"/usr/include
-	echo ">>>>>" ; date
-	make  cross-compiling=yes
-	make  cross-compiling=yes  install
-	make install
-)
-
-echo ">>> installing glibc (again)" ; date
-(
-	cd "$BUILDDIR"
-	mkdir glibc6 ; cd glibc6
-	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix=/arm-linux-gnueabihf/ --with-headers="$DESTINATIONDIR"/usr/include
-	echo ">>>>>" ; date
-	make  cross-compiling=yes
-	make  cross-compiling=yes  install
-	make install
-)
-
 echo ">>> building gcc (arm->arm)" ; date
 (
 	cd "$BUILDDIR"
