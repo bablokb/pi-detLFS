@@ -40,7 +40,7 @@ you have three options to supply the kernel-version:
   1. put a kernel-config file `.config` in the root-directory of the scripts
      (see below)
   2. set the branch manually: `export BRANCH=rpi-4.19.y`. This must be
-     an existing branch in the Github-repository
+     an existing branch in the Github kernel-repository of the Foundation
   3. use the current default branch (hardcoded in the script `0b_kernel.sh`).
 
 To extract the kernel configuration from a running kernel, you need two commands:
@@ -50,6 +50,10 @@ To extract the kernel configuration from a running kernel, you need two commands
 
 Then copy the newly created file `.config` to the directory with the
 detLFS-scripts.
+
+If you `export MENUCONFIG=x` (the value does not matter as long as it
+not empty) prior to running the scripts, the kernel-build will call
+`make menuconfig` and let you change all settings interactivly.
 
 
 Modifications
@@ -68,7 +72,7 @@ Modifications
   - `0_getit.sh`: split up into sub-scripts `0?_*.sh` (useful if you only
     want to download/update parts of the system). The script is still there
     but just calls all the sub-scripts
-  - download all firmware files, not only bootcode.bin and start.elf
+  - download all firmware files, not only `bootcode.bin` and `start.elf`
   - all: add `-j`-parameter to (some) make commands. This speeds up the build
     dramatically on multicore systems
   - `2_basesystem.sh`: bugfix (overlays were not copied)
