@@ -54,7 +54,7 @@ mkdir -p "$SOURCESDIR"
 
 if [ ! -f "$DOWNLOADSDIR/.detlfs.binutils" ]; then
   echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading binutils"
-  wget --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/binutils/binutils-2.32.tar.xz
+  wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/binutils/binutils-2.32.tar.xz
   tar -xpJf "$DOWNLOADSDIR"/binutils-2.32.tar.xz -C "$SOURCESDIR"
   mv "$SOURCESDIR"/binutils-2.32 "$SOURCESDIR"/binutils
   touch "$DOWNLOADSDIR/.detlfs.binutils"
@@ -62,7 +62,7 @@ fi
 
 if [ ! -f "$DOWNLOADSDIR/.detlfs.glibc" ]; then
   echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading glibc"
-  wget --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.xz
+  wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.xz
   tar -xpJf "$DOWNLOADSDIR"/glibc-2.29.tar.xz -C "$SOURCESDIR"
   mv "$SOURCESDIR"/glibc-2.29 "$SOURCESDIR"/glibc
   touch "$DOWNLOADSDIR/.detlfs.glibc"
@@ -70,10 +70,10 @@ fi
 
 if [ ! -f "$DOWNLOADSDIR/.detlfs.gcc" ]; then
   echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading gcc"
-  wget --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.xz
-  wget --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.xz
-  wget --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
-  wget --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/gcc/gcc-8.3.0/gcc-8.3.0.tar.gz
+  wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.xz
+  wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.xz
+  wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz
+  wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/gcc/gcc-8.3.0/gcc-8.3.0.tar.gz
   tar -xpzf "$DOWNLOADSDIR"/gcc-8.3.0.tar.gz -C "$SOURCESDIR"
   mv "$SOURCESDIR"/gcc-8.3.0 "$SOURCESDIR"/gcc
   tar -xpJf "$DOWNLOADSDIR"/gmp-6.1.2.tar.xz -C "$SOURCESDIR"/gcc
