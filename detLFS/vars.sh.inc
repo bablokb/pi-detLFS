@@ -46,3 +46,4 @@ export DOWNLOADSDIR=`pwd`/Downloads
 export DESTINATIONDIR=`pwd`/Destination
 
 [ -z "$NUM_CPUS" ] && NUM_CPUS=$(nproc)
+[ -z "$NUM_CPUS" ] && NUM_CPUS=2
