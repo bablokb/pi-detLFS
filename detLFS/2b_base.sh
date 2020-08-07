@@ -96,9 +96,9 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (for real)"
 	mkdir glibc5 ; cd glibc5
 	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix=/usr --with-headers="$DESTINATIONDIR"/usr/include
 	echo ">>>>>" ; date
-	make  cross-compiling=yes
-	make  cross-compiling=yes  install
-	make install
+	make  -j "$NUM_CPUS" cross-compiling=yes
+	make  -j "$NUM_CPUS" cross-compiling=yes  install
+	make -j "$NUM_CPUS" install
 )
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (again)"
@@ -107,9 +107,9 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (again)"
 	mkdir glibc6 ; cd glibc6
 	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix=/arm-linux-gnueabihf/ --with-headers="$DESTINATIONDIR"/usr/include
 	echo ">>>>>" ; date
-	make  cross-compiling=yes
-	make  cross-compiling=yes  install
-	make install
+	make  -j "$NUM_CPUS" cross-compiling=yes
+	make  -j "$NUM_CPUS" cross-compiling=yes  install
+	make -j "$NUM_CPUS" install
 )
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): copying raspberry specific bootloader files"
