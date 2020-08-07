@@ -1,7 +1,6 @@
-#!/bin/sh
-# $Id: 2_basesystem.sh 78 2020-05-21 18:40:23Z dettus $
+#!/bin/bash
 
-#Copyright (c) 2020, Thomas Dettbarn
+#Copyright (c) 2020, Thomas Dettbarn, Bernhard Bablok
 #All rights reserved.
 #
 #Redistribution and use in source and binary forms, with or without
