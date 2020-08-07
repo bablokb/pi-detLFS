@@ -69,8 +69,13 @@ cp -a .config "$DETLFSROOT"/.config.defconfig
 if [ -f "$DETLFSROOT"/.config ]; then
   cp -a "$DETLFSROOT"/.config "$DETLFSROOT"/.config.in
   cp -a "$DETLFSROOT"/.config .config
-  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target oldconfig"
-  make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- oldconfig
+  if [ -z "$MENUCONFIG" ]; then
+    echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target oldconfig"
+    make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- oldconfig
+  else
+    echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target menuconfig"
+    make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- menuconfig
+  fi
   cp -a .config "$DETLFSROOT"/.config
 fi
 
