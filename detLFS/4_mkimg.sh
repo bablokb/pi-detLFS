@@ -85,6 +85,12 @@ mkfs.ext4 ${loopdev}p2
 # mount partitions
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): mounting partitions"
 mntdir=$(mktemp -d --tmpdir detlfs.XXXXXX)
+if [ -z "$mntdir" ]; then
+  echo "error: could not create temporary mount-directory" >&2
+  rm detlfs.img
+  exit 3
+fi
+
 mount -t ext4 "${loopdev}p2" "$mntdir"
 mkdir -p "$mntdir/boot"
 mount -t vfat "${loopdev}p1" "$mntdir/boot"
@@ -112,5 +118,14 @@ umount "$mntdir/boot" && umount "$mntdir" && rm -fr "$mntdir"
 # cleanup loop-mounts
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): releasing $loopdev"
 losetup -d ${loopdev}
+
+# try to give ownership back to original user
+if [ "$USER" != "root" ]; then
+  gid=$(id -g "$USER")
+  chown "$USER:$gid" detlfs.img
+elif [ -n "$SUDO_USER" ]; then
+  gid=$(id -g "$SUDO_USER")
+  chown "$SUDO_USER:$gid" detlfs.img
+fi
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
