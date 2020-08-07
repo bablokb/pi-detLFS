@@ -58,7 +58,7 @@ if [ ! -f "$DOWNLOADSDIR/.detlfs.bootloader" ]; then
   for f in bootcode.bin fixup.dat fixup4.dat fixup4cd.dat fixup4db.dat fixup4x.dat \
            fixup_cd.dat fixup_db.dat fixup_x.dat start.elf start4.elf \
            start4cd.elf start4db.elf start4x.elf start_cd.elf start_db.elf start_x.elf; do
-    wget -nvO "$DOWNLOADSDIR/boot/$f" "$FIRMWARE_URL/$f" &
+    wget -nv -O "$DOWNLOADSDIR/boot/$f" "$FIRMWARE_URL/$f" &
   done
   wait
   touch "$DOWNLOADSDIR/.detlfs.bootloader"
