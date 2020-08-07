@@ -52,6 +52,8 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): starting $0"
 mkdir -p "$DESTINATIONDIR"
 
 export PATH="$TOOLSDIR"/bin:$PATH
+export CROSS_COMPILE=$TOOLSDIR/bin/arm-linux-gnueabihf-
+export DESTDIR=$DESTINATIONDIR
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building BUSYBOX"
 (
@@ -95,8 +97,8 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (for real)"
 	mkdir glibc5 ; cd glibc5
 	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix=/usr --with-headers="$DESTINATIONDIR"/usr/include
 	echo ">>>>>" ; date
-	make  -j "$NUM_CPUS" cross-compiling=yes
-	make  -j "$NUM_CPUS" cross-compiling=yes  install
+	make -j "$NUM_CPUS" cross-compiling=yes
+	make -j "$NUM_CPUS" cross-compiling=yes install
 	make -j "$NUM_CPUS" install
 )
 
@@ -106,8 +108,8 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (again)"
 	mkdir glibc6 ; cd glibc6
 	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix=/arm-linux-gnueabihf/ --with-headers="$DESTINATIONDIR"/usr/include
 	echo ">>>>>" ; date
-	make  -j "$NUM_CPUS" cross-compiling=yes
-	make  -j "$NUM_CPUS" cross-compiling=yes  install
+	make -j "$NUM_CPUS" cross-compiling=yes
+	make -j "$NUM_CPUS" cross-compiling=yes  install
 	make -j "$NUM_CPUS" install
 )
 
