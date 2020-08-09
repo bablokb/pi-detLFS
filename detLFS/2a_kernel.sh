@@ -56,7 +56,7 @@ cd linux
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): creating the logo"
 
-convert "$DETLFSROOT"/logo/mylogo.xpm -scale \!80x80 /tmp/mylogo.png
+convert "$DETLFSROOT"/logo/mylogo.* -scale \!80x80 /tmp/mylogo.png
 pngtopnm /tmp/mylogo.png | ppmquant 224 | pnmnoraw >drivers/video/logo/logo_linux_clut224.ppm
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target $def_config"
