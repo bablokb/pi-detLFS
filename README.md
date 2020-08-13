@@ -56,6 +56,19 @@ not empty) prior to running the scripts, the kernel-build will call
 `make menuconfig` and let you change all settings interactivly.
 
 
+Selecting the target hardware
+-----------------------------
+
+Use
+
+    export target=pi0
+
+to select the pi0-hardware-family. Replace /pi0/ with one of
+/pi1/, /p2/, /p3/, /p4/, /cm1/ or /cm3/. Note that there are currently
+only four hardware-families, so p1 is a synonym for p0 and cm1 (and
+likewise for the other families).
+
+
 Modifications
 -------------
 
@@ -75,6 +88,7 @@ Modifications
   - download all firmware files, not only `bootcode.bin` and `start.elf`
   - all: add `-j`-parameter to (some) make commands. This speeds up the build
     dramatically on multicore systems
+  - `1_buildtools.sh`: build with armv6-architecture to support all pi-models
   - `2_basesystem.sh`: bugfix (overlays were not copied)
   - `2_basesystem.sh`: split up into sub-scripts `2?_*.sh` (useful if you only
     want to build parts of the system). The script is still there
@@ -82,3 +96,4 @@ Modifications
   - '3a_comppackages.sh': move glibc-installation to `2b_base.sh`, since glibc is
     not optional
   - `4_mkimg.sh`: (new) creates an installable image (similar to the official images)
+  - `skeldir/root`: add german keymap (load with `loadkeys < de.bmap`)
