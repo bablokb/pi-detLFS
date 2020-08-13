@@ -49,44 +49,44 @@ mkdir -p "$TOOLSDIR"
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing Kernel Headers"
 (
-	cd "$BUILDDIR"
-	cp -r --reflink=auto "$SOURCESDIR"/linux .
-	cd linux
-	mkdir -p "$TOOLSDIR"/usr/include/asm
-	make  ARCH=arm INSTALL_HDR_PATH="$TOOLSDIR"/usr headers_install
+  cd "$BUILDDIR"
+  cp -r --reflink=auto "$SOURCESDIR"/linux .
+  cd linux
+  mkdir -p "$TOOLSDIR"/usr/include/asm
+  make  ARCH=arm INSTALL_HDR_PATH="$TOOLSDIR"/usr headers_install
 )
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc headers"
 (
-	cd "$BUILDDIR"
-	mkdir glibc1 ; cd glibc1
-	CC=gcc NM=nm "$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix="$TOOLSDIR"/ --with-headers="$TOOLSDIR"/usr/include --with-fp
-	make  -k cross-compiling=yes install-headers  
-	mkdir -p "$TOOLSDIR"/include/gnu/
-	touch "$TOOLSDIR"/include/gnu/stubs.h
+  cd "$BUILDDIR"
+  mkdir glibc1 ; cd glibc1
+  CC=gcc NM=nm "$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix="$TOOLSDIR"/ --with-headers="$TOOLSDIR"/usr/include --with-fp
+  make  -k cross-compiling=yes install-headers  
+  mkdir -p "$TOOLSDIR"/include/gnu/
+  touch "$TOOLSDIR"/include/gnu/stubs.h
 )
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc headers"
 (
-	cd "$BUILDDIR"
-	mkdir glibc2 ; cd glibc2
-	CC=gcc NM=nm "$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix="$TOOLSDIR"/arm-linux-gnueabihf/ --with-headers="$TOOLSDIR"/usr/include --with-fp
-	make  -k cross-compiling=yes install-headers  
-	mkdir -p "$TOOLSDIR"/arm-linux-gnueabihf/include/gnu/
-	touch "$TOOLSDIR"/arm-linux-gnueabihf/include/gnu/stubs.h
+  cd "$BUILDDIR"
+  mkdir glibc2 ; cd glibc2
+  CC=gcc NM=nm "$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix="$TOOLSDIR"/arm-linux-gnueabihf/ --with-headers="$TOOLSDIR"/usr/include --with-fp
+  make  -k cross-compiling=yes install-headers  
+  mkdir -p "$TOOLSDIR"/arm-linux-gnueabihf/include/gnu/
+  touch "$TOOLSDIR"/arm-linux-gnueabihf/include/gnu/stubs.h
 )
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building binutils (cross)"
 (
-	cd "$BUILDDIR"
-	mkdir binutils1 ; cd binutils1
-	"$SOURCESDIR"/binutils/configure --target=arm-linux-gnueabihf --prefix="$TOOLSDIR" --with-sysroot --disable-nls --disable-werror
-	make -j "$NUM_CPUS" && make install
+  cd "$BUILDDIR"
+  mkdir binutils1 ; cd binutils1
+  "$SOURCESDIR"/binutils/configure --target=arm-linux-gnueabihf --prefix="$TOOLSDIR" --with-sysroot --disable-nls --disable-werror
+  make -j "$NUM_CPUS" && make install
 )
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building gcc (cross)"
 (
-	cd "$BUILDDIR"
-	mkdir gcc1 ; cd gcc1
-	"$SOURCESDIR"/gcc/configure --target=arm-linux-gnueabihf --prefix="$TOOLSDIR" --disable-nls --disable-shared --enable-languages=c,c++ --with-arch=armv7-a --with-fpu=vfpv3-d16 --with-float=hard --disable-multilib --with-headers="$TOOLSDIR"/usr/include --with-build-time-tools="$TOOLSDIR" --with-build-sysroot="$TOOLSDIR"
-	make -j "$NUM_CPUS" all-target-libgcc && make install-gcc && make install-target-libgcc
+  cd "$BUILDDIR"
+  mkdir gcc1 ; cd gcc1
+  "$SOURCESDIR"/gcc/configure --target=arm-linux-gnueabihf --prefix="$TOOLSDIR" --disable-nls --disable-shared --enable-languages=c,c++ --with-arch=armv7-a --with-fpu=vfpv3-d16 --with-float=hard --disable-multilib --with-headers="$TOOLSDIR"/usr/include --with-build-time-tools="$TOOLSDIR" --with-build-sysroot="$TOOLSDIR"
+  make -j "$NUM_CPUS" all-target-libgcc && make install-gcc && make install-target-libgcc
 
 )
 
@@ -94,35 +94,34 @@ echo ">>> At this point, the cross compiler can be used to build the glibc"
 export PATH="$TOOLSDIR"/bin:"$TOOLSDIR"/usr/bin:$PATH
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (for real)"
 (
-	cd "$BUILDDIR"
-	mkdir glibc3 ; cd glibc3
-	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix="$TOOLSDIR" --with-headers="$TOOLSDIR"/usr/include --with-fp
-	make -j "$NUM_CPUS" cross-compiling=yes
-	make  cross-compiling=yes  install
-	make install
+  cd "$BUILDDIR"
+  mkdir glibc3 ; cd glibc3
+  "$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix="$TOOLSDIR" --with-headers="$TOOLSDIR"/usr/include --with-fp
+  make -j "$NUM_CPUS" cross-compiling=yes
+  make  cross-compiling=yes  install
+  make install
 )
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): installing glibc (for the build)"
 (
-	cd "$BUILDDIR"
-	mkdir glibc4 ; cd glibc4
-	"$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix="$TOOLSDIR"/arm-linux-gnueabihf/ --with-headers="$TOOLSDIR"/usr/include --with-fp
-	echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished configure"
-	make -j "$NUM_CPUS" cross-compiling=yes
-	make  cross-compiling=yes  install
-	make install
+  cd "$BUILDDIR"
+  mkdir glibc4 ; cd glibc4
+  "$SOURCESDIR"/glibc/configure --host=arm-linux-gnueabihf --prefix="$TOOLSDIR"/arm-linux-gnueabihf/ --with-headers="$TOOLSDIR"/usr/include --with-fp
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished configure"
+  make -j "$NUM_CPUS" cross-compiling=yes
+  make  cross-compiling=yes  install
+  make install
 )
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building gcc (with shared)"
 (
-	cd "$BUILDDIR"
-	mkdir gcc2 ; cd gcc2
-	"$SOURCESDIR"/gcc/configure --target=arm-linux-gnueabihf --prefix="$TOOLSDIR" --disable-nls --enable-languages=c,c++ --disable-multilib --with-arch=armv7-a --with-fpu=vfpv3-d16 --with-float=hard --with-headers="$TOOLSDIR"/usr/include --with-build-time-tools="$TOOLSDIR"
-	echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished configure"
-	make -j "$NUM_CPUS" all-target-libgcc && make install-gcc && make install-target-libgcc
-	make -j "$NUM_CPUS"
-	make install
+  cd "$BUILDDIR"
+  mkdir gcc2 ; cd gcc2
+  "$SOURCESDIR"/gcc/configure --target=arm-linux-gnueabihf --prefix="$TOOLSDIR" --disable-nls --enable-languages=c,c++ --disable-multilib --with-arch=armv7-a --with-fpu=vfpv3-d16 --with-float=hard --with-headers="$TOOLSDIR"/usr/include --with-build-time-tools="$TOOLSDIR"
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished configure"
+  make -j "$NUM_CPUS" all-target-libgcc && make install-gcc && make install-target-libgcc
+  make -j "$NUM_CPUS"
+  make install
 )
-
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): Checking the Tools"
 "$TOOLSDIR"/bin/arm-linux-gnueabihf-gcc -o Helloworld_shared.app helloworld.c
