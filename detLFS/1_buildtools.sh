@@ -92,7 +92,7 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building gcc (cross)"
   "$SOURCESDIR"/gcc/configure --target=arm-linux-gnueabihf \
       --prefix="$TOOLSDIR" --disable-nls --disable-shared \
         --enable-languages=c,c++ \
-          --with-arch=armv7-a --with-fpu=vfpv3-d16 \
+          $CONFIG_OPTS \
             --with-float=hard --disable-multilib \
               --with-headers="$TOOLSDIR"/usr/include \
                 --with-build-time-tools="$TOOLSDIR" --with-build-sysroot="$TOOLSDIR"
@@ -132,7 +132,7 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building gcc (with shared)"
   "$SOURCESDIR"/gcc/configure --target=arm-linux-gnueabihf \
      --prefix="$TOOLSDIR" --disable-nls --enable-languages=c,c++ \
        --disable-multilib \
-         --with-arch=armv7-a --with-fpu=vfpv3-d16 \
+          $CONFIG_OPTS \
            --with-float=hard --with-headers="$TOOLSDIR"/usr/include \
              --with-build-time-tools="$TOOLSDIR"
   echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished configure"
