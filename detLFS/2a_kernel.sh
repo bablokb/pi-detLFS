@@ -56,13 +56,15 @@ cd linux
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): creating the logo"
 
-mylogo=$(detLFS/logo/mylogo.* 2>/dev/null | head -n 1)
+mylogo=$(ls -1 "$DETLFSROOT"/logo/mylogo.* 2>/dev/null | head -n 1)
 if [ -n "$mylogo" ]; then
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): using logo: $mylogo"
   convert "$DETLFSROOT"/logo/mylogo.* -scale \!80x80 /tmp/mylogo.png
        pngtopnm /tmp/mylogo.png | ppmquant 224 | \
           pnmnoraw >drivers/video/logo/logo_linux_clut224.ppm
 else
-  cp -a "$DETLFSROOT"/logo/detLFS-logo.xpm \
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): using default logo"
+  cp -a "$DETLFSROOT"/logo/detLFS-logo.ppm \
            drivers/video/logo/logo_linux_clut224.ppm
 fi
 
