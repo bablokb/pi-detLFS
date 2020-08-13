@@ -47,3 +47,11 @@ export DESTINATIONDIR=`pwd`/Destination
 
 [ -z "$NUM_CPUS" ] && NUM_CPUS=$(nproc)
 [ -z "$NUM_CPUS" ] && NUM_CPUS=2
+
+# compiler settings for pi0 and above
+
+CC_OPTS="--with-arch=armv6 --with-fpu=vfp"
+
+# compiler settings _only_ for pi2 and above
+
+#CC_OPTS="--with-arch=armv7-a --with-fpu=vfpv3-d16"
