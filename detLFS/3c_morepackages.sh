@@ -1,7 +1,6 @@
-#!/bin/sh
-# $Id: 3c_morepackages.sh 78 2020-05-21 18:40:23Z dettus $
+#!/bin/bash
 
-#Copyright (c) 2020, Thomas Dettbarn
+#Copyright (c) 2020, Thomas Dettbarn, Bernhard Bablok
 #All rights reserved.
 #
 #Redistribution and use in source and binary forms, with or without
@@ -35,7 +34,7 @@ echo "
       /     \\       /     \\       /
      /       \\     /       \\     /
 -----         -----         -----
-http://www.dettus.net/detLFS/detLFS_0.07.tar.bz2
+https://github.com/bablokb/pi-detLFS
 
  The purpose of this script is to provide an example of how to 
  compile your own packages.
@@ -52,62 +51,54 @@ export CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf-
 export DESTDIR="$DESTINATIONDIR"
 
 
-echo ">>> ncurses" ; date
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): ncurses"
 (
-	wget --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/ncurses/ncurses-6.1.tar.gz
-	cd "$SOURCESDIR" ; tar xfz "$DOWNLOADSDIR"/ncurses-6.1.tar.gz ; mv ncurses-6.1 ncurses
-	cd "$BUILDDIR"
-	mkdir ncurses1 ; cd ncurses1
-	"$SOURCESDIR"/ncurses/configure --prefix=/usr --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf --without-sysmouse   --disable-ext-mouse  --enable-widec --with-shared --with-cxx-shared
+  wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/ncurses/ncurses-6.1.tar.gz
+  cd "$SOURCESDIR"
+  tar -xfz "$DOWNLOADSDIR"/ncurses-6.1.tar.gz
+  mv ncurses-6.1 ncurses
 
-	make  && make install -i
+  cd "$BUILDDIR"
+  mkdir ncurses1
+  cd ncurses1
+  "$SOURCESDIR"/ncurses/configure --prefix=/usr --target=arm-linux-gnueabihf \
+    --host=arm-linux-gnueabihf --without-sysmouse \
+      --disable-ext-mouse  --enable-widec --with-shared --with-cxx-shared
+  make -j "$NUM_CPUS"&& make -j "$NUM_CPUS" install -i
 )
 
-
-echo ">> building alsa-firmware"
+echo ">> $(date +'%Y-%m-%d %H:%M:%S'): building alsa-firmware"
 (
-	wget --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.alsa-project.org/pub/firmware/alsa-firmware-1.0.29.tar.bz2
-	cd "$SOURCESDIR" ; tar xvfj "$DOWNLOADSDIR"/alsa-firmware-1.0.29.tar.bz2 ; mv alsa-firmware-1.0.29/ alsa-firmware/
+  wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.alsa-project.org/pub/firmware/alsa-firmware-1.0.29.tar.bz2
+  cd "$SOURCESDIR"
+  tar -xfj "$DOWNLOADSDIR"/alsa-firmware-1.0.29.tar.bz2
+  mv alsa-firmware-1.0.29 alsa-firmware
 
-	cd "$BUILDDIR"
-	mkdir alsa-firmware1 ; cd alsa-firmware1
-	cp --reflink=auto -r  "$SOURCESDIR"/alsa-firmware .	# alsa firmware does not build like the others.
-	cd alsa-firmware
-	./configure --prefix=/usr --target=arm-linux-gnueabihf 
-	make	 
-	make install
+  cd "$BUILDDIR"
+  mkdir alsa-firmware1
+  cd alsa-firmware1
+  cp --reflink=auto -r "$SOURCESDIR"/alsa-firmware .
 
+  # alsa firmware does not build like the others.
+  cd alsa-firmware
+  ./configure --prefix=/usr --target=arm-linux-gnueabihf 
+  make -j "$NUM_CPUS"
+  make -j "$NUM_CPUS" install
 )
 
-echo ">>> building alsa-libs"
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building alsa-libs"
 (
-	wget --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.alsa-project.org/pub/lib/alsa-lib-1.1.8.tar.bz2
-	cd "$SOURCESDIR" ; tar xvfj "$DOWNLOADSDIR"/alsa-lib-1.1.8.tar.bz2 ; mv alsa-lib-1.1.8 alsa-lib
-	cd "$BUILDDIR"
-	mkdir alsa-lib1 ; cd alsa-lib1
-	"$SOURCESDIR"/alsa-lib/configure --target=arm-linux-gnueabihf --prefix=/usr
-	make 
-	make install
+  wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.alsa-project.org/pub/lib/alsa-lib-1.1.8.tar.bz2
+  cd "$SOURCESDIR"
+  tar -xfj "$DOWNLOADSDIR"/alsa-lib-1.1.8.tar.bz2
+  mv alsa-lib-1.1.8 alsa-lib
+
+  cd "$BUILDDIR"
+  mkdir alsa-lib1
+  cd alsa-lib1
+  "$SOURCESDIR"/alsa-lib/configure --target=arm-linux-gnueabihf --prefix=/usr
+  make -j "$NUM_CPUS"
+  make -j "$NUM_CPUS" install
 )
-####
-####echo ">>> building wget"
-####(
-####	wget --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/wget/wget-1.19.1.tar.xz
-####	cd "$SOURCESDIR" ; tar xvfJ "$DOWNLOADSDIR"/wget-1.19.1.tar.xz ; mv wget-1.19.1/ wget
-####
-####	cd "$BUILDDIR"
-####	mkdir wget1 ; cd wget1
-####	cp --reflink=auto -r  "$SOURCESDIR"/wget .
-####	cd wget
-####	./configure --prefix=/usr --target=arm-linux-gnueabihf  --host=arm-linux-gnueabihf --disable-iri --without-zlib --without-libgnutls-prefix
-####	make	 
-####	make install
-####)
-####
-####
-du -sh "$TOOLSDIR"
-du -sh "$BUILDDIR"
-du -sh "$DESTINATIONDIR"
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
-
