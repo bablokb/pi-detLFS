@@ -54,7 +54,7 @@ mkdir -p "$DOWNLOADSDIR"
 mkdir -p "$SOURCESDIR"
 
 if [ ! -f "$DOWNLOADSDIR/.detlfs.kernel" ]; then
-  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading the kernel, specifically for the Raspberry Pi"
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): cloning the kernel-source"
 
   # get kernel-version
   if [ -f ".config" ]; then
@@ -63,11 +63,12 @@ if [ ! -f "$DOWNLOADSDIR/.detlfs.kernel" ]; then
   elif [ -n "$BRANCH" ]; then
     kbranch="$BRANCH"
   else
-    kbranch="rpi-4.19.y"
+    kbranch=""
   fi
-  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): using branch $kbranch"
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): using branch ${kbranch:-default}"
 
-  git clone --depth=1 --branch "$kbranch" https://github.com/raspberrypi/linux "$DOWNLOADSDIR"/linux
+  git clone --depth=1 ${kbranch:+--branch $kbranch} \
+               https://github.com/raspberrypi/linux "$DOWNLOADSDIR"/linux
   rm -rf "$DOWNLOADSDIR/linux/.git"
   touch "$DOWNLOADSDIR/.detlfs.kernel"
   cp --reflink=auto -r "$DOWNLOADSDIR"/linux "$SOURCESDIR"/
