@@ -67,7 +67,7 @@ fi
 if [ ! -f "$DOWNLOADSDIR/.detlfs.busybox" ]; then
   echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading busybox"
   # if you are updating to a new version of busybox, you will have to monitor the build process. the standard config_busybox file might fail.
-  wget --directory-prefix="$DOWNLOADSDIR" -c https://busybox.net/downloads/busybox-1.31.1.tar.bz2
+  wget -nv --directory-prefix="$DOWNLOADSDIR" -c https://busybox.net/downloads/busybox-1.31.1.tar.bz2
   tar -xjpf "$DOWNLOADSDIR"/busybox-1.31.1.tar.bz2 -C "$SOURCESDIR"
   mv "$SOURCESDIR"/busybox-1.31.1 "$SOURCESDIR"/busybox
   touch "$DOWNLOADSDIR/.detlfs.busybox"

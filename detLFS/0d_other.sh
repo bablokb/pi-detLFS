@@ -54,7 +54,7 @@ mkdir -p "$SOURCESDIR"
 
 if [ ! -f "$DOWNLOADSDIR/.detlfs.make" ]; then
   echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): downloading make"
-  wget --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz
+  wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/make/make-4.2.1.tar.gz
   tar -xzpf "$DOWNLOADSDIR"/make-4.2.1.tar.gz -C "$SOURCESDIR"
   mv "$SOURCESDIR"/make-4.2.1 "$SOURCESDIR"/make
   # fixing make/glob/glob.c to circumvent an old __alloca bug
