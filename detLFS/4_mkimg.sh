@@ -98,7 +98,7 @@ mount -t vfat "${loopdev}p1" "$mntdir/boot"
 # copy content
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): copying $DESTINATIONDIR to $mntdir"
 
-rsync -av "$DESTINATIONDIR/" "$mntdir"
+rsync -a "$DESTINATIONDIR/" "$mntdir"
 
 # create necessary device-files
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): creating nodes"
