@@ -1,7 +1,6 @@
-#!/bin/sh
-# $Id: 3a_comppackages.sh 78 2020-05-21 18:40:23Z dettus $
+#!/bin/bash
 
-#Copyright (c) 2020, Thomas Dettbarn
+#Copyright (c) 2020, Thomas Dettbarn, Bernhard Bablok
 #All rights reserved.
 #
 #Redistribution and use in source and binary forms, with or without
@@ -35,7 +34,7 @@ echo "
       /     \\       /     \\       /
      /       \\     /       \\     /
 -----         -----         -----
-http://www.dettus.net/detLFS/detLFS_0.07.tar.bz2
+https://github.com/bablokb/pi-detLFS
 
  The purpose of this script is to build the packages.
 
@@ -51,40 +50,46 @@ export CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf-
 export DESTDIR="$DESTINATIONDIR"
 
 
-echo ">>> building BINUTILS" ; date
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building BINUTILS"
 (
-	cd "$BUILDDIR"
-	mkdir binutils2/ ; cd binutils2
-	export CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf-
-	"$SOURCESDIR"/binutils/configure --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf --prefix=/usr --with-sysroot --disable-nls --disable-werror
-	echo ">>>>>" ; date
-	make 
-	make install
+  cd "$BUILDDIR"
+  mkdir binutils2
+  cd binutils2
+  export CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf-
+  "$SOURCESDIR"/binutils/configure \
+         --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf \
+             --prefix=/usr --with-sysroot --disable-nls --disable-werror
+  make -j "$NUM_CPUS"
+  make  -j "$NUM_CPUS" install
 )
 
-echo ">>> building gcc (arm->arm)" ; date
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building gcc (arm->arm)"
 (
-	cd "$BUILDDIR"
-	mkdir gcc3 ; cd gcc3
-	"$SOURCESDIR"/gcc/configure --prefix=/usr --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf --disable-nls --enable-languages=c,c++ --disable-multilib --with-arch=armv7 --with-fpu=vfpv3-d16 --with-float=hard --with-build-sysroot="$DESTINATIONDIR"
-	echo ">>>>>" ; date
-	make  all-target-libgcc && make install-gcc && make install-target-libgcc
-	make 
-	make install
+  cd "$BUILDDIR"
+  mkdir gcc3
+  cd gcc3
+  "$SOURCESDIR"/gcc/configure --prefix=/usr --target=arm-linux-gnueabihf \
+    --host=arm-linux-gnueabihf --disable-nls --enable-languages=c,c++ \
+      $CONFIG_OPTS \
+        --with-float=hard --disable-multilib \
+           --with-build-sysroot="$DESTINATIONDIR"
+
+  make  -j "$NUM_CPUS" all-target-libgcc && \
+    make  -j "$NUM_CPUS" install-gcc && \
+      make  -j "$NUM_CPUS" install-target-libgcc
+  make -j "$NUM_CPUS"
+  make  -j "$NUM_CPUS" install
 )
 
-echo ">>> building make" ; date
+echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building make"
 (
-	cd "$BUILDDIR"
-	mkdir make1 ; cd make1
-	"$SOURCESDIR"/make/configure --prefix=/usr --target=arm-linux-gnueabihf --host=arm-linux-gnueabihf  --without-guile
-	make 
-	make install
+  cd "$BUILDDIR"
+  mkdir make1
+  cd make1
+  "$SOURCESDIR"/make/configure --prefix=/usr --target=arm-linux-gnueabihf \
+    --host=arm-linux-gnueabihf  --without-guile
+  make -j "$NUM_CPUS"
+  make  -j "$NUM_CPUS" install
 )
-
-du -sh "$TOOLSDIR"
-du -sh "$BUILDDIR"
-du -sh "$DESTINATIONDIR"
-du -sh "$DESTINATIONDIR"/boot
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): finished $0"
