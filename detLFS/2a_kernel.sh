@@ -73,18 +73,22 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target $def_config"
 make -j "$NUM_CPUS" ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- "$def_config"
 cp -a .config "$DETLFSROOT"/.config.defconfig
 
-# oldconfig will probably trigger some questions, so we copy it to
-# reuse it without questions on a second run
 if [ -f "$DETLFSROOT"/.config ]; then
   cp -a "$DETLFSROOT"/.config "$DETLFSROOT"/.config.in
   cp -a "$DETLFSROOT"/.config .config
   if [ -z "$MENUCONFIG" ]; then
     echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target oldconfig"
     make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- oldconfig
-  else
-    echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target menuconfig"
-    make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- menuconfig
   fi
+fi
+if [ -n "$MENUCONFIG" ]; then
+  echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): KERNEL-build: target menuconfig"
+  make ARCH=arm CROSS_COMPILE="$TOOLSDIR"/bin/arm-linux-gnueabihf- menuconfig
+fi
+
+# In case we created a configuration with oldconfig/menuconfig, copy and
+# reuse it (without questions) on a second run
+if [ -f "$DETLFSROOT"/.config -o -n "$MENUCONFIG" ]; then
   cp -a .config "$DETLFSROOT"/.config
 fi
 
