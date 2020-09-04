@@ -55,7 +55,7 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): ncurses"
 (
   wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.gnu.org/gnu/ncurses/ncurses-6.1.tar.gz
   cd "$SOURCESDIR"
-  tar -xfz "$DOWNLOADSDIR"/ncurses-6.1.tar.gz
+  tar -xzf "$DOWNLOADSDIR"/ncurses-6.1.tar.gz
   mv ncurses-6.1 ncurses
 
   cd "$BUILDDIR"
@@ -71,7 +71,7 @@ echo ">> $(date +'%Y-%m-%d %H:%M:%S'): building alsa-firmware"
 (
   wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.alsa-project.org/pub/firmware/alsa-firmware-1.0.29.tar.bz2
   cd "$SOURCESDIR"
-  tar -xfj "$DOWNLOADSDIR"/alsa-firmware-1.0.29.tar.bz2
+  tar -xjf "$DOWNLOADSDIR"/alsa-firmware-1.0.29.tar.bz2
   mv alsa-firmware-1.0.29 alsa-firmware
 
   cd "$BUILDDIR"
@@ -90,7 +90,7 @@ echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): building alsa-libs"
 (
   wget -nv --directory-prefix="$DOWNLOADSDIR" -c ftp://ftp.alsa-project.org/pub/lib/alsa-lib-1.1.8.tar.bz2
   cd "$SOURCESDIR"
-  tar -xfj "$DOWNLOADSDIR"/alsa-lib-1.1.8.tar.bz2
+  tar -xjf "$DOWNLOADSDIR"/alsa-lib-1.1.8.tar.bz2
   mv alsa-lib-1.1.8 alsa-lib
 
   cd "$BUILDDIR"
