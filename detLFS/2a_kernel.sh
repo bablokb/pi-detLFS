@@ -50,9 +50,9 @@ mkdir -p "$DESTINATIONDIR"
 export PATH="$TOOLSDIR"/bin:$PATH
 
 
-cd "$BUILDDIR"/
-rm -rf linux ; cp -r --reflink=auto "$SOURCESDIR"/linux .
-cd linux
+rm -rf "$BUILDDIR"/linux
+cp -r --reflink=auto "$SOURCESDIR"/linux "$BUILDDIR"/
+cd "$BUILDDIR"/linux
 
 echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): creating the logo"
 

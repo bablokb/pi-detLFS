@@ -67,10 +67,13 @@ if [ ! -f "$DOWNLOADSDIR/.detlfs.kernel" ]; then
   fi
   echo ">>> $(date +'%Y-%m-%d %H:%M:%S'): using branch ${kbranch:-default}"
 
+  rm -fr "$DOWNLOADSDIR"/linux
   git clone --depth=1 ${kbranch:+--branch $kbranch} \
                https://github.com/raspberrypi/linux "$DOWNLOADSDIR"/linux
   rm -rf "$DOWNLOADSDIR/linux/.git"
   touch "$DOWNLOADSDIR/.detlfs.kernel"
+
+  rm -fr "$SOURCESDIR"/linux
   cp --reflink=auto -r "$DOWNLOADSDIR"/linux "$SOURCESDIR"/
 fi
 
